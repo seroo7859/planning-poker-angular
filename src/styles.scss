@@ -1,1 +1,98 @@
-/* You can add global styles to this file, and also import other style files */
+/* Font
+ ------------------------------------------------------------ */
+
+@font-face {
+  font-family: 'Nixie One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local('NixieOne-Regular'),
+    url('assets/font/Nixie_One/NixieOne-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  font-stretch: 100%;
+  font-display: swap;
+  src:
+    local('OpenSans-Light'),
+    url('assets/font/Open_Sans/static/OpenSans-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src:
+    local('OpenSans-Regular'),
+    url('assets/font/Open_Sans/static/OpenSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src:
+    local('OpenSans-Medium'),
+    url('assets/font/Open_Sans/static/OpenSans-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src:
+    local('OpenSans-SemiBold'),
+    url('assets/font/Open_Sans/static/OpenSans-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src:
+    local('OpenSans-Bold'),
+    url('assets/font/Open_Sans/static/OpenSans-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src:
+    local('OpenSans-ExtraBold'),
+    url('assets/font/Open_Sans/static/OpenSans-ExtraBold.ttf') format('truetype');
+}
+
+
+/*
+ ------------------------------------------------------------ */
+
+body,
+p {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Nixie One', cursive;
+  font-weight: 400;
+}
