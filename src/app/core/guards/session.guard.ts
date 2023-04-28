@@ -1,11 +1,5 @@
-import {inject, Injectable} from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree
-} from '@angular/router';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { SessionService } from "../services/session.service";
 
 export const sessionGuard = () => {
