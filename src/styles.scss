@@ -1,4 +1,4 @@
-/* Font
+/* Fonts
  ------------------------------------------------------------ */
 
 @font-face {
@@ -8,7 +8,7 @@
   font-display: swap;
   src:
     local('NixieOne-Regular'),
-    url('assets/font/Nixie_One/NixieOne-Regular.ttf') format('truetype');
+    url('assets/fonts/Nixie_One/NixieOne-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -19,7 +19,7 @@
   font-display: swap;
   src:
     local('OpenSans-Light'),
-    url('assets/font/Open_Sans/static/OpenSans-Light.ttf') format('truetype');
+    url('assets/fonts/Open_Sans/static/OpenSans-Light.ttf') format('truetype');
 }
 
 @font-face {
@@ -30,7 +30,7 @@
   font-display: swap;
   src:
     local('OpenSans-Regular'),
-    url('assets/font/Open_Sans/static/OpenSans-Regular.ttf') format('truetype');
+    url('assets/fonts/Open_Sans/static/OpenSans-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -41,7 +41,7 @@
   font-display: swap;
   src:
     local('OpenSans-Medium'),
-    url('assets/font/Open_Sans/static/OpenSans-Medium.ttf') format('truetype');
+    url('assets/fonts/Open_Sans/static/OpenSans-Medium.ttf') format('truetype');
 }
 
 @font-face {
@@ -52,7 +52,7 @@
   font-display: swap;
   src:
     local('OpenSans-SemiBold'),
-    url('assets/font/Open_Sans/static/OpenSans-SemiBold.ttf') format('truetype');
+    url('assets/fonts/Open_Sans/static/OpenSans-SemiBold.ttf') format('truetype');
 }
 
 @font-face {
@@ -63,7 +63,7 @@
   font-display: swap;
   src:
     local('OpenSans-Bold'),
-    url('assets/font/Open_Sans/static/OpenSans-Bold.ttf') format('truetype');
+    url('assets/fonts/Open_Sans/static/OpenSans-Bold.ttf') format('truetype');
 }
 
 @font-face {
@@ -74,11 +74,11 @@
   font-display: swap;
   src:
     local('OpenSans-ExtraBold'),
-    url('assets/font/Open_Sans/static/OpenSans-ExtraBold.ttf') format('truetype');
+    url('assets/fonts/Open_Sans/static/OpenSans-ExtraBold.ttf') format('truetype');
 }
 
 
-/*
+/* Global Styles
  ------------------------------------------------------------ */
 
 body,
@@ -95,4 +95,239 @@ h5,
 h6 {
   font-family: 'Nixie One', cursive;
   font-weight: 400;
+}
+
+
+/* Utilities
+ ------------------------------------------------------------ */
+
+.overflow-x-auto {
+  overflow-x: auto!important;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden!important;
+}
+
+.box-decoration-clone {
+  -webkit-box-decoration-break: clone;
+  -o-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.text-stroke-thin {
+  -webkit-text-stroke-width: thin;
+}
+
+.text-stroke-medium {
+  -webkit-text-stroke-width: medium;
+}
+
+.text-stroke-thick {
+  -webkit-text-stroke-width: thick;
+}
+
+
+/* Scrollbar
+ ------------------------------------------------------------ */
+
+::-webkit-scrollbar {
+  width: 0.4em;
+  height: 0.4em;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 0.4em;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  border-radius: 0.4em;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: gray;
+}
+
+
+/* Buttons
+ ------------------------------------------------------------ */
+
+.btn-outline-warning {
+  --bs-btn-bg: white;
+  --bs-btn-border-color: var(--bs-gray-300);
+}
+
+.btn-outline-warning:active {
+  --bs-btn-active-color: white;
+}
+
+.btn-outline-warning:hover,
+.btn-outline-warning:focus {
+  --bs-btn-hover-color: white;
+  --bs-btn-hover-bg: var(--bs-warning);
+  --bs-btn-hover-border-color: var(--bs-warning);
+}
+
+
+/* Floating Labels
+ ------------------------------------------------------------ */
+
+.form-floating>.form-control,
+.form-floating>.form-control-plaintext,
+.form-floating>.form-select {
+  height: calc(3rem + calc(var(--bs-border-width) * 2));
+  line-height: 1;
+}
+
+.form-floating>.form-select {
+  background-position: right calc(1em + 0.1875rem) center;
+}
+
+.form-floating>label {
+  padding: 0.75rem 2.75rem;
+}
+
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label,
+.form-floating>.form-select~label {
+  transform: translateY(-0.5rem) translateX(-0.15rem);
+  font-size: small;
+}
+
+.form-floating>.form-select~label {
+  padding: 0.75rem 4rem;
+}
+
+
+/* Forms Validation
+ ------------------------------------------------------------ */
+
+.form-control.is-valid,
+.was-validated .form-control:valid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23198754' class='bi bi-check-circle-fill' viewBox='0 0 16 16'%3E%3Cpath d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/%3E%3C/svg%3E");
+  background-position: right calc(1em + 0.1875rem) center;
+  padding-right: calc(2.6em + 0.75rem) !important;
+}
+
+.form-control.is-invalid,
+.was-validated .form-control:invalid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23dc3545' class='bi bi-exclamation-circle-fill' viewBox='0 0 16 16'%3E%3Cpath d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z'/%3E%3C/svg%3E");
+  background-position: right calc(1em + 0.1875rem) center;
+  padding-right: calc(2.6em + 0.75rem) !important;
+}
+
+.form-select.is-valid:not([multiple]):not([size]) {
+  background-image:
+    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23198754' class='bi bi-check-circle-fill' viewBox='0 0 16 16'%3E%3Cpath d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/%3E%3C/svg%3E");
+  background-position: right calc(1em + 0.1875rem) center, center right calc(2.6em + 0.1875rem);
+  padding-right: calc(4em + 0.75rem) !important;
+}
+
+.form-select.is-invalid:not([multiple]):not([size]) {
+  background-image:
+    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23dc3545' class='bi bi-exclamation-circle-fill' viewBox='0 0 16 16'%3E%3Cpath d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z'/%3E%3C/svg%3E");
+  background-position: right calc(1em + 0.1875rem) center, center right calc(2.6em + 0.1875rem);
+  padding-right: calc(4em + 0.75rem) !important;
+}
+
+
+/* Forms Elements
+ ------------------------------------------------------------ */
+
+.form-check-input:checked {
+  background-color: var(--bs-warning);
+  border-color: var(--bs-warning);
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--bs-warning);
+  box-shadow: 0 0 0 .25rem rgba(var(--bs-warning-rgb), 0.25);
+  outline: none;
+}
+
+
+/* Rounded Color Input
+ ------------------------------------------------------------ */
+
+.form-control.form-control-color-sm {
+  width: 1em !important;
+  height: 1em !important;
+}
+
+.form-control.form-control-color-sm::-webkit-color-swatch {
+  border-radius: 1em !important;
+}
+
+.form-control.form-control-color-sm::-moz-color-swatch {
+  border-radius: 1em !important;
+}
+
+input[type="color"],
+.form-control.form-control-color {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.5em;
+  height: 1.5em;
+  background: none;
+  padding: 0;
+  border: 1px solid #dee2e6;
+  cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch,
+.form-control.form-control-color::-webkit-color-swatch {
+  border: 0;
+  border-radius: 1.5em;
+}
+
+input[type="color"]::-moz-color-swatch,
+.form-control.form-control-color::-moz-color-swatch {
+  border: 0;
+  border-radius: 1.5em;
+}
+
+
+/* Tooltips
+ ------------------------------------------------------------ */
+
+.tooltip {
+  --bs-tooltip-bg: var(--bs-black);
+  --bs-tooltip-opacity: 1;
+  --bs-tooltip-border-radius: 20px;
+  --bs-tooltip-padding-x: 14px;
+  --bs-tooltip-padding-y: 6px;
+  --bs-tooltip-font-size: small;
+  --bs-tooltip-arrow-width: .8rem;
+  --bs-tooltip-arrow-height: .4rem;
+}
+
+.tooltip-lg {
+  --bs-tooltip-bg: var(--bs-black);
+  --bs-tooltip-opacity: 1;
+  --bs-tooltip-border-radius: 24px;
+  --bs-tooltip-padding-x: 18px;
+  --bs-tooltip-padding-y: 10px;
+  --bs-tooltip-font-size: medium;
+  --bs-tooltip-arrow-width: .75rem;
+  --bs-tooltip-arrow-height: .45rem;
+}
+
+
+/* Content Editable
+ ------------------------------------------------------------ */
+
+[contenteditable="true"]:active,
+[contenteditable="true"]:focus{
+  border: none;
+  outline: none;
+}
+
+[contenteditable="true"]:hover{
+  cursor: text;
 }
