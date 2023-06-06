@@ -1,0 +1,13 @@
+app-toasts {
+  .toast-info,
+  .toast-success,
+  .toast-warning,
+  .toast-error {
+    --bs-toast-header-color: none;
+    --bs-toast-header-bg: none;
+
+    .toast-header .btn-close {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <ngb-toast *ngFor="let toast of toastService.toasts"
+             [class]="toast.options?.className"
+             [header]="toast.title || ''"
+             [delay]="toast.options?.delay || DEFAULT_TOAST_DELAY"
+             [autohide]="true"
+             (hidden)="toastService.remove(toast)">
+    <ng-container [ngSwitch]="toast.type" >
+      <div class="d-flex align-items-center" *ngSwitchCase="'INFO'">
+        <i class="bi bi-info-circle-fill fs-5 me-2 pe-1"></i>
+        <div [innerHTML]="toast.text"></div>
+        <button *ngIf="!toast.title" type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="d-flex align-items-center" *ngSwitchCase="'SUCCESS'">
+        <i class="bi bi-check-circle-fill fs-5 me-2 pe-1"></i>
+        <div [innerHTML]="toast.text"></div>
+        <button *ngIf="!toast.title" type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="d-flex align-items-center" *ngSwitchCase="'WARNING'">
+        <i class="bi bi-exclamation-circle-fill fs-5 me-2 pe-1"></i>
+        <div [innerHTML]="toast.text"></div>
+        <button *ngIf="!toast.title" type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="d-flex align-items-center" *ngSwitchCase="'ERROR'">
+        <i class="bi bi-x-circle-fill fs-5 me-2 pe-1"></i>
+        <div [innerHTML]="toast.text"></div>
+        <button *ngIf="!toast.title" type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div [innerHTML]="toast.text" *ngSwitchDefault></div>
+    </ng-container>
+  </ngb-toast>
+</div>
