@@ -1,9 +1,9 @@
 import { ActionReducer, ActionReducerMap, MetaReducer } from "@ngrx/store";
-import { PlanningPokerStateModel } from "./model/planning-poker.state.model";
-import { reducer, storeFeatureKey } from "../reducers/planning-poker-reducers";
+import { PlanningPokerStoreStateModel } from "./model/planning-poker-store.state.model";
+import { reducer, storeFeatureKey } from "../reducers/planning-poker-store.reducers";
 
 export interface AppState {
-  [storeFeatureKey]: PlanningPokerStateModel;
+  [storeFeatureKey]: PlanningPokerStoreStateModel;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
