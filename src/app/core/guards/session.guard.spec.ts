@@ -1,13 +1,14 @@
 import { TestBed } from '@angular/core/testing';
+import { CanActivateFn } from "@angular/router";
 
-import { SessionGuard } from './session.guard';
+import { sessionGuard } from './session.guard';
 
 describe('SessionGuard', () => {
-  let guard: SessionGuard;
+  let guard: CanActivateFn;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(SessionGuard);
+    guard = TestBed.inject(sessionGuard);
   });
 
   it('should be created', () => {
