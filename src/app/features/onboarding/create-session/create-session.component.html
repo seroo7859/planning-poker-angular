@@ -1,1 +1,59 @@
-<p>session-create works!</p>
+<form #createSessionForm="ngForm" (ngSubmit)="onSubmit$.next(createSessionForm)" class="needs-validation" autocomplete="off">
+  <div class="mb-3">
+    <div class="input-group">
+      <div class="form-floating">
+        <input id="team" name="team" ngModel required type="text" class="form-control rounded-pill border-1 shadow-sm px-4"
+               placeholder="Team" pattern="[A-Za-z0-9 _\-]+" minlength="1" maxlength="32" spellcheck="false"
+               #team="ngModel"
+               [class.is-valid]="(team.value || createSessionForm.submitted ) && team.valid"
+               [class.is-invalid]="(team.value || createSessionForm.submitted) && team.invalid">
+        <label for="team" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+          Your Team
+          <span *ngIf="(team.value || createSessionForm.submitted) && team.invalid" class="text-danger small">Invalid input*</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <div class="input-group">
+      <div class="form-floating">
+        <input id="username" name="username" ngModel required type="text" class="form-control rounded-pill border-1 shadow-sm px-4"
+               placeholder="Username" pattern="[A-Za-z ]+" minlength="1" maxlength="32" spellcheck="false"
+               #username="ngModel"
+               [class.is-valid]="(username.value || createSessionForm.submitted) && username.valid"
+               [class.is-invalid]="(username.value || createSessionForm.submitted) && username.invalid">
+        <label for="username" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+          Your Name
+          <span *ngIf="(username.value || createSessionForm.submitted) && username.invalid" class="text-danger small">Invalid input*</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <div class="input-group">
+      <div class="form-floating">
+        <select id="deck" name="deck" ngModel required class="form-select rounded-pill border-1 shadow-sm pt-3 pb-0 ps-4 pe-5"
+                #deck="ngModel"
+                [class.is-valid]="(deck.value !== 'custom' || createSessionForm.submitted) && deck.valid"
+                [class.is-invalid]="(deck.value || createSessionForm.submitted) && deck.invalid"
+                (change)="onDeckChanged(deck)">
+          <option class="d-none opacity-75" value="" disabled>Select a card deck</option>
+          <option *ngFor="let deck of decks$ | async;" value="{{ deck.name | lowercase }}">{{ deck.name }} ({{ getEstimationValues(deck) | join:', ' }})</option>
+          <option class="fw-bold" value="custom">Create a custom card deck</option>
+        </select>
+        <label for="deck" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+          Card Deck
+          <span *ngIf="(deck.value || createSessionForm.submitted) && deck.invalid" class="text-danger small">Invalid selection*</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="mt-4 text-center text-lg-start">
+    <button type="submit" class="btn btn-lg btn-outline-warning rounded-pill shadow-sm px-4 fw-bold text-uppercase">Create Session
+      <i *ngIf="!(session$ | async)?.xhr.pending; else loading" class="bi bi-arrow-right text-stroke-medium ps-2"></i>
+      <ng-template #loading>
+        <span class="spinner-border spinner-border-sm ms-2" style="--bs-spinner-vertical-align: initial;" role="status" aria-hidden="true"></span>
+      </ng-template>
+    </button>
+  </div>
+</form>
