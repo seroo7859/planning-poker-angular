@@ -1,7 +1,6 @@
 export interface XhrStateModel {
   pending: boolean;
-  succeeded: boolean;
+  succeed: boolean;
   failed: boolean;
-  payload: any;
   error: any;
 }
