@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
+import { NgbToastModule } from "@ng-bootstrap/ng-bootstrap";
+import { CoreModule } from "../../core/core.module";
 
 @NgModule({
   declarations: [
@@ -10,7 +12,9 @@ import { DashboardComponent } from './dashboard.component';
   ],
   imports: [
     CommonModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    NgbToastModule,
+    CoreModule
   ]
 })
 export class DashboardModule { }
