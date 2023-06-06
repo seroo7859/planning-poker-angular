@@ -10,12 +10,24 @@ const routes: Routes = [
     component: OnboardingComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'create-session',
+        pathMatch: 'full'
+      },
+      {
         path: 'create-session',
-        component: CreateSessionComponent
+        component: CreateSessionComponent,
+        data: { animation: 'CreateSession' }
       },
       {
         path: 'join-session',
         component: JoinSessionComponent,
+        data: { animation: 'JoinSession' }
+      },
+      {
+        path: '**',
+        redirectTo: 'create-session',
+        pathMatch: 'full'
       }
     ]
   }

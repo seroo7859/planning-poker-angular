@@ -1,22 +1,27 @@
-<div class="container-fluid vh-100">
-  <div class="row h-100 bg-image justify-content-center align-items-center align-content-center">
+<div class="container-fluid bg-gradient">
+  <div class="row min-vh-100 py-4 bg-image justify-content-center align-items-center align-content-center">
     <div class="col-12 col-lg-5 d-flex flex-column justify-content-center align-items-center mx-auto">
       <div class="text-center mb-3">
-        <h1 class="teaser d-inline fw-bold text-white bg-dark rounded-3 shadow-sm px-2 py-1" style="line-height: 1.25;">Planning Poker <span class="text-nowrap">Web App</span></h1>
+        <h1 class="d-inline fw-bold text-white bg-dark rounded-3 shadow-sm box-decoration-clone lh-base px-2 py-1">Planning Poker <span class="text-nowrap">Web App</span></h1>
       </div>
       <div class="text-center mb-4 mb-lg-3 ps-2">
-        <h3 class="teaser d-inline fw-bold text-white bg-dark rounded-3 shadow-sm px-2 py-1" style="line-height: 1.3;">Estimate backlog items with your <span class="text-nowrap">agile remote team</span></h3>
+        <h3 class="d-inline fw-bold text-white bg-dark rounded-3 shadow-sm box-decoration-clone lh-base px-2 py-1">Estimate backlog items with your <span class="text-nowrap">agile remote team</span></h3>
       </div>
-<!--      <ul class="nav nav-pills justify-content-center ps-2" id="myTab" role="tablist">-->
-<!--        <li class="nav-item" role="presentation">-->
-<!--          <button class="nav-link me-3 rounded-pill border border-1 shadow-sm fs-5 text-uppercase px-4 active" id="create-tab" data-bs-toggle="tab" data-bs-target="#create-tab-pane" type="button" role="tab" aria-controls="create-tab-pane" aria-selected="true">Create</button>-->
-<!--        </li>-->
-<!--        <li class="nav-item" role="presentation">-->
-<!--          <button class="nav-link ms-3 rounded-pill border border-1 shadow-sm fs-5 text-uppercase px-4" id="join-tab" data-bs-toggle="tab" data-bs-target="#join-tab-pane" type="button" role="tab" aria-controls="join-tab-pane" aria-selected="false">Join</button>-->
-<!--        </li>-->
-<!--      </ul>-->
+      <ul class="nav nav-pills justify-content-center ps-2 gap-4">
+        <li class="nav-item">
+          <a routerLink="./create-session" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+             class="nav-link rounded-pill border border-1 shadow-sm fs-5 text-uppercase px-4" role="button">Create</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="./join-session" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }"
+             class="nav-link rounded-pill border border-1 shadow-sm fs-5 text-uppercase px-4" role="button">Join</a>
+        </li>
+      </ul>
     </div>
     <div class="col-12 col-sm-8 col-lg-5 mx-auto">
-      <router-outlet></router-outlet>
+      <div class="position-relative mt-4" [@fadeAnimation]="getRouteAnimationData()">
+        <router-outlet></router-outlet>
+      </div>
     </div>
+  </div>
 </div>

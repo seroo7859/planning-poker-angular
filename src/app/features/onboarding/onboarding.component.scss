@@ -1,8 +1,53 @@
-/* Teaser
+/* Navigation Pills
  ------------------------------------------------------------ */
 
-.teaser {
-  -webkit-box-decoration-break: clone;
-  -o-box-decoration-break: clone;
-  box-decoration-break: clone;
+.nav-pills .nav-link.active {
+  --bs-nav-pills-link-active-color: white;
+  --bs-nav-pills-link-active-bg: var(--bs-dark);
+  --bs-border-color: var(--bs-nav-pills-link-active-bg);
+}
+
+.nav-pills .nav-link:not(.active) {
+  --bs-nav-link-color: var(--bs-dark);
+  background-color: white;
+}
+
+.nav-pills .nav-link:not(.active):focus,
+.nav-pills .nav-link:not(.active):hover {
+  --bs-nav-link-hover-color: var(--bs-dark);
+}
+
+
+/* Background Image
+ ------------------------------------------------------------ */
+
+.bg-image {
+  position: relative;
+  background-image: url("/assets/img/connected-world-cuate.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: left 2.5% top;
+  z-index: 0;
+}
+
+@media (max-width: 992px) {
+  .bg-image {
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+
+/* Background Gradient
+ ------------------------------------------------------------ */
+
+.bg-gradient {
+  --bs-gradient: repeating-radial-gradient(circle at left center, white, #e9ecef 50%);
+}
+
+@media (max-width: 992px) {
+  .bg-gradient {
+    --bs-gradient: repeating-radial-gradient(circle at center center, white, #e9ecef 100%);
+  }
 }
