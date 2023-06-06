@@ -1,0 +1,60 @@
+<div class="container pb-2">
+  <div class="modal-header border-bottom-0">
+    <h1 class="modal-title text-center w-100 fs-3 fw-bold">Create Deck</h1>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form id="deckForm" #deckForm="ngForm" (ngSubmit)="onSubmit(deckForm)" class="needs-validation mb-4" autocomplete="off">
+      <div class="mb-3">
+        <div class="form-floating">
+          <input id="deck-name" name="deck-name" ngModel required type="text" class="form-control rounded-pill shadow-sm border-1 px-4"
+                 placeholder="Deck Name" pattern="[A-Za-z0-9 _\-]+" minlength="1" maxlength="32" spellcheck="false"
+                  #deckName='ngModel'
+                 [(ngModel)]="deck.name"
+                 [class.is-valid]="(deckName.value || deckForm.submitted) && deckName.valid"
+                 [class.is-invalid]="(deckName.value || deckForm.submitted) && deckName.invalid">
+          <label for="deck-name" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+            Deck Name
+            <span *ngIf="(deckName.value || deckForm.submitted) && deckName.invalid" class="text-danger small">Invalid input*</span>
+          </label>
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="form-floating">
+          <input id="deck-input" name="deck-input" ngModel required type="text" class="form-control rounded-pill shadow-sm border-1 px-4"
+                 placeholder="1, 2, 3, 5, 8, 13, 21, 34, 55, 89" minlength="1" maxlength="96" spellcheck="false"
+                 #deckInput='ngModel'
+                 appDeckInputValidator
+                 [class.is-valid]="(deckInput.value || deckForm.submitted) && deckInput.valid"
+                 [class.is-invalid]="(deckInput.value || deckForm.submitted) && deckInput.invalid"
+                 (input)="onDeckInput(deckInput)">
+          <label for="deck-input" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+            Estimation Values
+            <span *ngIf="(deckInput.value || deckForm.submitted) && deckInput.invalid" class="text-danger small">Invalid input*</span>
+          </label>
+          <div class="form-text">
+            <div class="alert text-dark px-4 py-0 mt-2 mb-1" role="alert">
+              Enter unique estimation values separated by commas (1, 2, 3, etc.).
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 px-4">
+          <div class="form-check form-switch">
+            <label class="form-check-label" for="deck-special">Special (?, <i class="bi bi-infinity"></i>, <i class="bi bi-cup-hot-fill"></i>)</label>
+            <input id="deck-special" name="deck-special" [ngModel]="false" class="form-check-input" type="checkbox"
+                   #deckSpecial='ngModel'
+                   (change)="deckSpecial.value ? addSpecial(deckInput) : removeSpecial(deckInput)">
+          </div>
+      </div>
+    </form>
+    <div class="m-0">
+      <p class="fs-4 fw-bold text-center visually-hidden">Preview</p>
+      <app-deck *ngIf="deckInput.value" [wrap]="true" [size]="'md'" [deck]="deck"></app-deck>
+    </div>
+  </div>
+  <div class="modal-footer border-top-0 justify-content-center">
+    <button type="button" class="btn btn-secondary btn-lg rounded-pill shadow-sm px-4 me-3" (click)="activeModal.dismiss('Cancel click')">Cancel</button>
+    <button form="deckForm" type="submit" ngbAutofocus class="btn btn-warning btn-lg rounded-pill shadow-sm text-white px-4">Save</button>
+  </div>
+</div>
