@@ -1,12 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from "./dashboard.component";
+import { sessionGuard } from "../../core/guards/session.guard";
 
 const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    children: []
+    pathMatch: 'full',
+    canActivate: [sessionGuard]
+  },
+  {
+    path: ':id',
+    component: DashboardComponent,
+    canActivate: [sessionGuard]
   }
 ];
 
