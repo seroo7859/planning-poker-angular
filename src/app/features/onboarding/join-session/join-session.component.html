@@ -1,1 +1,46 @@
-<p>session-join works!</p>
+<form #joinSessionForm="ngForm" (ngSubmit)="onSubmit(joinSessionForm)" class="needs-validation" autocomplete="off">
+  <div class="mb-3">
+    <div class="input-group">
+      <div class="form-floating">
+        <input id="sessionId" name="sessionId" ngModel="{{ route.snapshot.queryParamMap.get('id') }}" required type="text" class="form-control rounded-pill border-1 shadow-sm px-4" placeholder="Session-ID"
+               appSessionIdValidator minlength="36" maxlength="36" spellcheck="false"
+               #sessionId="ngModel"
+               [class.is-valid]="(sessionId.value || joinSessionForm.submitted) && sessionId.valid"
+               [class.is-invalid]="(sessionId.value || joinSessionForm.submitted) && sessionId.invalid">
+        <label for="sessionId" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+          Session ID
+          <span *ngIf="(sessionId.value || joinSessionForm.submitted) && sessionId.invalid" class="text-danger small">Invalid input*</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <div class="input-group">
+      <div class="form-floating">
+        <input id="username" name="username" ngModel required type="text" class="form-control rounded-pill border-1 shadow-sm px-4"
+               placeholder="Username" pattern="[A-Za-z ]+" minlength="1" maxlength="32" spellcheck="false"
+               #username="ngModel"
+               [class.is-valid]="(username.value || joinSessionForm.submitted) && username.valid"
+               [class.is-invalid]="(username.value || joinSessionForm.submitted) && username.invalid">
+        <label for="username" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+          Your Name
+          <span *ngIf="(username.value || joinSessionForm.submitted) && username.invalid" class="text-danger small">Invalid input*</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3 d-flex justify-content-start align-items-center mx-4">
+    <div class="form-check form-switch">
+      <label class="form-check-label" for="spectator">Spectator</label>
+      <input id="spectator" name="spectator" [ngModel]="false" class="form-check-input" type="checkbox">
+    </div>
+  </div>
+  <div class="mt-5 text-center text-lg-start">
+    <button type="submit" class="btn btn-lg btn-outline-warning rounded-pill shadow-sm px-4 fw-bold text-uppercase">Join Session
+      <i *ngIf="!(session$ | async)?.xhr.pending; else loading" class="bi bi-arrow-right text-stroke-medium ps-2"></i>
+      <ng-template #loading>
+        <span class="spinner-border spinner-border-sm ms-2" style="--bs-spinner-vertical-align: initial;" role="status" aria-hidden="true"></span>
+      </ng-template>
+    </button>
+  </div>
+</form>
