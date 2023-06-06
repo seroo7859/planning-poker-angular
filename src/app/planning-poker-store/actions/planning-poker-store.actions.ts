@@ -1,5 +1,3 @@
-import {getCurrentUserFailure, getCurrentUserSuccess} from "./user.actions";
-
 export enum ActionTypes {
   AddDeck = '[Decks] Add Deck',
 
