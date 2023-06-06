@@ -1,0 +1,20 @@
+<div *ngIf="deckCard"
+     class="deck-card deck-card-{{ size }}"
+     [class.flipped]="deckCard.flipped"
+     [class.selected]="deckCard.selected"
+     [ngStyle]="getStyleVariables()"
+     (click)="onDeckCardSelected()"
+     (keydown.enter)="onDeckCardSelected()">
+  <div class="deck-card-content" tabindex="0">
+    <div class="deck-card-front">
+      <ng-container [ngSwitch]="deckCard.value">
+        <i class="bi bi-infinity fs-1" *ngSwitchCase="'∞'"></i>
+        <i class="bi bi-cup-hot-fill fs-2" *ngSwitchCase="'☕'"></i>
+        <p class="fw-bold fs-2 lh-0 m-0" *ngSwitchDefault>{{ deckCard.value }}</p>
+      </ng-container>
+    </div>
+    <div class="deck-card-back">
+      <i class="bi bi-suit-spade-fill fs-2"></i>
+    </div>
+  </div>
+</div>

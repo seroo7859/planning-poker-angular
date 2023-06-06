@@ -1,0 +1,8 @@
+.list-group-horizontal.flex-nowrap {
+  overflow: hidden !important;
+}
+
+.list-group-horizontal.flex-nowrap:hover {
+  margin-bottom: calc(.5rem / 4) !important;
+  overflow: auto !important;
+}

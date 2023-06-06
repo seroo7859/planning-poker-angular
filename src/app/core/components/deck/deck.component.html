@@ -1,0 +1,8 @@
+<ul *ngIf="deck"
+    class="list-group list-group-horizontal gap-3 px-1 py-2"
+    [ngClass]="wrap ? 'flex-wrap justify-content-center align-items-center' : 'flex-nowrap overflow-x-auto overflow-y-hidden justify-content-start align-items-center mb-2'">
+  <li class="list-group-item border-0 p-0"
+      *ngFor="let deckCard of deck.cards;">
+    <app-deck-card [size]="size" [deckCard]="deckCard" (deckCardSelected)="onDeckCardSelected($event)"></app-deck-card>
+  </li>
+</ul>
