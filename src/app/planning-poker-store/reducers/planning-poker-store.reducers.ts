@@ -26,6 +26,22 @@ import {
   teamMemberConnected,
   teamMemberDisconnected
 } from "./team.reducers";
+import {
+  addBacklogItemSuccess,
+  backlogCleared,
+  backlogImported,
+  backlogItemAdded,
+  backlogItemMoved,
+  backlogItemRemoved,
+  backlogItemUpdated,
+  backlogRenamed,
+  clearBacklogSuccess,
+  importBacklogSuccess,
+  moveBacklogItemSuccess,
+  removeBacklogItemSuccess,
+  renameBacklogSuccess,
+  updateBacklogItemSuccess
+} from "./backlog.reducers";
 
 export const storeFeatureKey = 'planning-poker-store';
 
@@ -49,7 +65,21 @@ const planningPokerStoreReducers = createReducer(
   teamMemberJoined,
   teamMemberLeaved,
   teamMemberConnected,
-  teamMemberDisconnected
+  teamMemberDisconnected,
+  importBacklogSuccess,
+  backlogImported,
+  renameBacklogSuccess,
+  backlogRenamed,
+  clearBacklogSuccess,
+  backlogCleared,
+  addBacklogItemSuccess,
+  backlogItemAdded,
+  removeBacklogItemSuccess,
+  backlogItemRemoved,
+  updateBacklogItemSuccess,
+  backlogItemUpdated,
+  moveBacklogItemSuccess,
+  backlogItemMoved
 );
 
 export const reducer = (state: PlanningPokerStoreStateModel | undefined, action: Action): any => planningPokerStoreReducers(state, action);
