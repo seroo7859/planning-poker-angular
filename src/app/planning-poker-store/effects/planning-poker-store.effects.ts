@@ -1,7 +1,8 @@
-import { SessionEffects, TeamEffects, UserEffects } from "./index";
+import { BacklogEffects, SessionEffects, TeamEffects, UserEffects } from "./index";
 
 export const effects = [
   SessionEffects.SessionEffects,
   UserEffects.UserEffects,
-  TeamEffects.TeamEffects
+  TeamEffects.TeamEffects,
+  BacklogEffects.BacklogEffects
 ];
