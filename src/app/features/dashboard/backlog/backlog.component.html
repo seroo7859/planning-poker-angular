@@ -1,0 +1,201 @@
+<div *ngIf="(backlog$ | async) as backlog" class="offcanvas-lg offcanvas-start bg-body-secondary h-100" data-bs-scroll="false" data-bs-backdrop="true" tabindex="-1" id="offcanvasBacklog" aria-labelledby="offcanvasBacklogLabel">
+  <div *ngIf="(user$ | async) as user" class="offcanvas-body d-flex flex-column px-1 py-lg-3 h-100">
+    <div class="d-flex flex-nowrap justify-content-between align-items-center gap-2 px-3 mx-2">
+      <h3 class="offcanvas-title me-auto lh-1 mb-0" id="offcanvasBacklogLabel">Backlog</h3>
+      <div *ngIf="user.role === 'MODERATOR'" class="dropdown-center">
+        <button class="btn btn-lg btn-dark rounded-circle border-0 p-3 fs-3 position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-arrow-down-short rounded-circle position-absolute translate-middle lh-1 p-2" placement="bottom" container="body" ngbTooltip="Export"></i>
+        </button>
+        <ul class="dropdown-menu mt-2 shadow border-secondary-subtle py-0">
+          <li><button type="button" class="btn btn-sm btn-outline-dark dropdown-item py-2" (click)="exportBacklog()"><i class="bi bi-download text-stroke-thin pe-2"></i> Export as CSV</button></li>
+        </ul>
+      </div>
+      <div *ngIf="user.role === 'MODERATOR'" class="dropdown-center">
+        <button class="btn btn-lg btn-dark rounded-circle border-0 p-3 fs-3 position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-arrow-up-short rounded-circle position-absolute translate-middle lh-1 p-2" placement="bottom" container="body" ngbTooltip="Import"></i>
+        </button>
+        <ul class="dropdown-menu mt-2 shadow border-secondary-subtle py-0">
+          <li>
+            <input #fileInput class="form-control d-none" type="file" accept="text/csv" (change)="handleFileInput($event)">
+            <button type="button" class="btn btn-sm btn-outline-dark dropdown-item py-2" (click)="fileInput.click()"><i class="bi bi-upload text-stroke-thin pe-2"></i> Import from CSV</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center pt-2 px-3 mx-2 mb-3 small">
+      <p #backlogName class="text-start text-pre w-75 overflow-hidden mb-0"
+         [contentEditable]="user.role === 'MODERATOR'" spellcheck="false"
+         (focusout)="backlogName.innerText.trim() !== backlog.name ? renameBacklog(backlogName.innerText) : $event.preventDefault()"
+         (keydown.enter)="$event.preventDefault(); backlogName.blur()"
+         (keydown.escape)="backlogName.blur()">{{ backlog.name }}</p>
+      <div *ngIf="user.role === 'MODERATOR'">
+        <button class="btn btn-sm btn-light bg-transparent text-dark rounded-circle border-0 mx-1 p-2 position-relative" type="button" (click)="addBacklogItem()">
+          <i class="bi bi-plus-lg text-stroke-medium rounded-circle position-absolute translate-middle lh-0" container="body" placement="bottom" ngbTooltip="Add"></i>
+        </button>
+        <button class="btn btn-sm btn-light bg-transparent text-dark rounded-circle border-0 mx-1 p-2 position-relative" type="button" (click)="backlog.items.length > 0 ? clearBacklog() : $event.preventDefault()">
+          <i class="bi bi-trash-fill rounded-circle position-absolute translate-middle lh-0" placement="bottom" container="body" ngbTooltip="Clear"></i>
+        </button>
+      </div>
+    </div>
+    <ol id="backlog-items" class="list-group list-group-flush gap-2 px-3 mx-2 mb-2 overflow-x-hidden overflow-y-auto small" (mouseenter)="handleMouseEnter($event)" (mouseleave)="handleMouseLeave($event)">
+      <li *ngFor="let backlogItem of backlog.items;" class="list-group-item list-group-item-action rounded-3" tabindex="0" [attr.data-backlog-item-number]="backlogItem.number" (click)="handleClick($event, backlogItem)">
+        <div class="d-flex justify-content-between align-items-center">
+          <p class="fw-bold text-noselect my-1">{{ backlogItem.number }}</p>
+          <div *ngIf="user.role === 'MODERATOR'" class="dropdown-center">
+            <button class="btn btn-light text-dark bg-transparent border-0 p-0 fs-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-three-dots text-dark" placement="top" container="body" ngbTooltip="Options"></i>
+            </button>
+            <ul class="dropdown-menu shadow border-secondary-subtle py-0">
+              <li><button type="button" class="btn btn-sm btn-outline-dark dropdown-item border-bottom border-secondary-subtle rounded-0 rounded-top py-2" (click)="editBacklogItem(backlogItem)"><i class="bi bi-pencil-fill pe-2"></i> Edit</button></li>
+              <li><button type="button" class="btn btn-sm btn-outline-dark dropdown-item rounded-0 rounded-bottom py-2" (click)="removeBacklogItem(backlogItem.number)"><i class="bi bi-trash-fill pe-2"></i> Delete</button></li>
+            </ul>
+          </div>
+        </div>
+        <p class="mb-2 text-wrap text-break text-noselect">{{ backlogItem.title }}</p>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge bg-warning rounded-pill fw-normal text-noselect" style="font-size: 0.85em;">{{ backlogItem.estimation }}<i *ngIf="!backlogItem.estimation" class="bi bi-dash"></i></span>
+          <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-sm btn-secondary rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;">Estimate
+            <i [ngClass]="backlogItem.estimation && backlogItem.estimation.length > 0 ? 'bi-repeat' : 'bi-arrow-right'" class="bi small ps-1"></i>
+          </button>
+        </div>
+      </li>
+    </ol>
+    <p class="text-center small pt-2 px-3 mx-2 mt-auto mb-1">{{ getNumberOfEstimatedBacklogItems(backlog) }} of {{ backlog.items.length }} estimated</p>
+  </div>
+</div>
+
+<ng-template #addBacklogItemModalContent let-modal>
+  <div class="container pb-2">
+    <div class="modal-header border-bottom-0">
+      <h1 class="modal-title text-center w-100 fs-4 fw-bold">Add Backlog Item</h1>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form id="addBacklogItemForm" #addBacklogItemForm="ngForm" (ngSubmit)="addBacklogItemForm.valid ? modal.close(addBacklogItemForm.value) : $event.preventDefault()" class="needs-validation" autocomplete="off">
+        <div class="mb-3">
+          <div class="form-floating">
+            <input id="add-backlog-item-title" name="title" ngModel required type="text" class="form-control rounded-pill shadow-sm border-1 px-4"
+                   placeholder="Title" pattern="[A-Za-z0-9 _\-]+" minlength="1" maxlength="64" spellcheck="false"
+                   #backlogItemTitle='ngModel'
+                   [class.is-valid]="(backlogItemTitle.value || addBacklogItemForm.submitted) && backlogItemTitle.valid"
+                   [class.is-invalid]="(backlogItemTitle.value || addBacklogItemForm.submitted) && backlogItemTitle.invalid">
+            <label for="add-backlog-item-title" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+              Title
+              <span *ngIf="(backlogItemTitle.value || addBacklogItemForm.submitted) && backlogItemTitle.invalid" class="text-danger small">Invalid input*</span>
+            </label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
+            <textarea id="add-backlog-item-description" name="description" ngModel type="text" class="form-control rounded-5 shadow-sm border-1 px-4" style="height: 8.5rem; min-height: 3.125rem; max-height: 8.5rem;"
+                   placeholder="Description (Optional)" pattern="[A-Za-z0-9 !\x22#$%&'()*+,\-./:;<=>?@\[\]^_`{|}~]+" minlength="0" maxlength="256" spellcheck="false"
+                   #backlogItemDescription='ngModel'
+                   [class.is-valid]="(backlogItemDescription.value || addBacklogItemForm.submitted) && backlogItemDescription.valid"
+                   [class.is-invalid]="(backlogItemDescription.value || addBacklogItemForm.submitted) && backlogItemDescription.invalid">
+            </textarea>
+            <label for="add-backlog-item-description" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+              <span class="bg-white" style="height: max-content">Description <span class="fst-italic">(Optional)</span></span>
+              <span *ngIf="(backlogItemDescription.value || addBacklogItemForm.submitted) && backlogItemDescription.invalid" class="text-danger small">Invalid input*</span>
+            </label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer border-top-0 justify-content-center">
+      <button type="button" class="btn btn-secondary rounded-pill shadow-sm px-4 me-3" (click)="modal.dismiss('Cancel click')">Cancel</button>
+      <button form="addBacklogItemForm" type="submit" ngbAutofocus class="btn btn-warning rounded-pill shadow-sm text-white px-4">Add</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #editBacklogItemModalContent let-modal>
+  <div *ngIf="(user$ | async) as user" class="container pb-2">
+    <div class="modal-header border-bottom-0">
+      <h1 class="modal-title text-center w-100 fs-4 fw-bold">Backlog Item</h1>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form id="editBacklogItemForm" #editBacklogItemForm="ngForm" (ngSubmit)="editBacklogItemForm.valid ? modal.close(editBacklogItemForm.value) : $event.preventDefault()" class="needs-validation" autocomplete="off">
+        <div class="mb-3">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input id="show-backlog-item-number" name="number" ngModel="{{ selectedBacklogItem?.number }}" type="text" readonly class="form-control rounded-pill shadow-sm bg-white border-1 px-4" placeholder="US000"
+                       #number="ngModel"
+                       [disabled]="user.role !== 'MODERATOR'"
+                       [class.is-valid]="(number.value || editBacklogItemForm.submitted) && number.valid"
+                       [class.is-invalid]="(number.value || editBacklogItemForm.submitted) && number.invalid">
+                <label for="show-backlog-item-number" class="col-form-label opacity-75 ps-4">Number <span class="fst-italic">(Readonly)</span></label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select id="estimation" name="estimation" ngModel="{{ selectedBacklogItem?.estimation }}" class="form-select rounded-pill border-1 shadow-sm bg-white pt-3 pb-0 ps-4 pe-5"
+                        #estimation="ngModel"
+                        [disabled]="user.role !== 'MODERATOR'"
+                        [class.is-valid]="(estimation.value || editBacklogItemForm.submitted) && estimation.valid"
+                        [class.is-invalid]="(estimation.value || editBacklogItemForm.submitted) && estimation.invalid">
+                  <option class="d-none opacity-75" value="" disabled [innerText]="user.role === 'MODERATOR' ? 'Select a estimation': '-'"></option>
+                  <option *ngFor="let estimationValue of getEstimationValues(deck$ | async);" value="{{ estimationValue }}">{{ estimationValue }}</option>
+                </select>
+                <label for="estimation" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+                  <span>Estimation <span class="fst-italic">(Optional)</span></span>
+                  <span *ngIf="(estimation.value || editBacklogItemForm.submitted) && estimation.invalid" class="text-danger small">Invalid selection*</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="form-floating">
+            <input id="edit-backlog-item-title" name="title" ngModel="{{ selectedBacklogItem?.title }}" required type="text" class="form-control rounded-pill shadow-sm bg-white border-1 px-4"
+                   placeholder="Title" pattern="[A-Za-z0-9 _\-]+" minlength="1" maxlength="64" spellcheck="false"
+                   #backlogItemTitle='ngModel'
+                   [disabled]="user.role !== 'MODERATOR'"
+                   [class.is-valid]="(backlogItemTitle.value || editBacklogItemForm.submitted) && backlogItemTitle.valid"
+                   [class.is-invalid]="(backlogItemTitle.value || editBacklogItemForm.submitted) && backlogItemTitle.invalid">
+            <label for="edit-backlog-item-title" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+              Title
+              <span *ngIf="(backlogItemTitle.value || editBacklogItemForm.submitted) && backlogItemTitle.invalid" class="text-danger small">Invalid input*</span>
+            </label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <div class="form-floating">
+            <textarea id="edit-backlog-item-description" name="description" ngModel="{{ selectedBacklogItem?.description }}" type="text" class="form-control rounded-5 shadow-sm bg-white border-1 px-4" style="height: 8.5rem; min-height: 3.125rem; max-height: 8.5rem;"
+                      placeholder="Description (Optional)" pattern="[A-Za-z0-9 !\x22#$%&'()*+,\-./:;<=>?@\[\]^_`{|}~]+" minlength="0" maxlength="256" spellcheck="false"
+                      #backlogItemDescription='ngModel'
+                      [disabled]="user.role !== 'MODERATOR'"
+                      [class.is-valid]="(backlogItemDescription.value || editBacklogItemForm.submitted) && backlogItemDescription.valid"
+                      [class.is-invalid]="(backlogItemDescription.value || editBacklogItemForm.submitted) && backlogItemDescription.invalid">
+            </textarea>
+            <label for="edit-backlog-item-description" class="col-form-label d-flex justify-content-between opacity-75 ps-4">
+              <span class="bg-white" style="height: max-content">Description <span class="fst-italic">(Optional)</span></span>
+              <span *ngIf="(backlogItemDescription.value || editBacklogItemForm.submitted) && backlogItemDescription.invalid" class="text-danger small">Invalid input*</span>
+            </label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer border-top-0 justify-content-center">
+      <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-secondary rounded-pill shadow-sm px-4 me-3" (click)="modal.dismiss('Cancel click')">Cancel</button>
+      <button *ngIf="user.role === 'MODERATOR'" form="editBacklogItemForm" type="submit" ngbAutofocus class="btn btn-warning rounded-pill shadow-sm text-white px-4">Save</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #clearBacklogModalContent let-modal>
+  <div class="container pb-2">
+    <div class="modal-header border-bottom-0">
+      <h1 class="modal-title text-center w-100 fs-4 fw-bold">Clear Backlog</h1>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <p *ngIf="(backlog$ | async) as backlog" class="mb-2">Are you sure you want to remove all <span class="text-decoration-underline">{{ backlog.items.length }} backlog items</span>?</p>
+    </div>
+    <div class="modal-footer border-top-0 justify-content-center">
+      <button type="button" class="btn btn-secondary rounded-pill shadow-sm px-4 me-3" (click)="modal.dismiss('Cancel click')">Cancel</button>
+      <button type="button" ngbAutofocus class="btn btn-warning rounded-pill shadow-sm text-white px-4" (click)="modal.close('Ok click')">Ok</button>
+    </div>
+  </div>
+</ng-template>

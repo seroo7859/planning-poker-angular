@@ -1,0 +1,10 @@
+.list-group-item-action.active .badge {
+  background-color: white !important;
+  color: var(--bs-warning);
+}
+
+.list-group-item-action.active .btn,
+.list-group-item-action.active .dropdown,
+.list-group-item-action.active .dropdown-center {
+  display: none;
+}
