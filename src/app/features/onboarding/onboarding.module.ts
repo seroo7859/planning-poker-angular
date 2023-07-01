@@ -10,20 +10,19 @@ import { NgbTooltipModule } from "@ng-bootstrap/ng-bootstrap";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 
-
 @NgModule({
   declarations: [
     OnboardingComponent,
     CreateSessionComponent,
     JoinSessionComponent
   ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        OnboardingRoutingModule,
-        NgbTooltipModule,
-        SharedModule,
-        CoreModule
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    OnboardingRoutingModule,
+    NgbTooltipModule,
+    SharedModule,
+    CoreModule
+  ]
 })
 export class OnboardingModule { }
