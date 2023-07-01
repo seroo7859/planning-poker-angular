@@ -50,6 +50,25 @@ export class SessionEffects {
     );
   }, { dispatch: false });
 
+  leaveSession$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(SessionActions.leaveSession),
+      exhaustMap(action =>
+        this.sessionService.leaveSession(action.sessionId).pipe(
+          map(session => SessionActions.leaveSessionSuccess({ session })),
+          catchError(error => of(SessionActions.leaveSessionFailure({ error })))
+        )
+      )
+    )
+  );
+
+  leaveSessionSuccessRedirect$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(SessionActions.leaveSessionSuccess),
+      exhaustMap((action) => this.router.navigateByUrl(`app/onboarding/join-session?id=${action.session.id}`))
+    );
+  }, { dispatch: false });
+
   getSession$ = createEffect(() =>
     this.actions$.pipe(
       ofType(SessionActions.getSession),
