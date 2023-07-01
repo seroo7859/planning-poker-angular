@@ -20,6 +20,18 @@ export class RxStompService extends RxStomp {
     );
   }
 
+  connect() {
+    if (!this.active) {
+      this.activate();
+    }
+  }
+
+  disconnect() {
+    if (this.active) {
+      setTimeout(async () => await this.deactivate(), 0);
+    }
+  }
+
   public disconnected(): boolean {
     return this.connectionState$.getValue() === RxStompState.CLOSED;
   }
