@@ -40,6 +40,24 @@ export const joinSessionFailure = createAction(
 );
 
 
+// Leave Session Actions
+
+export const leaveSession = createAction(
+  ActionTypes.LeaveSession,
+  props<{ sessionId: string }>()
+);
+
+export const leaveSessionSuccess = createAction(
+  ActionTypes.LeaveSessionSuccess,
+  props<{ session: SessionModel }>()
+);
+
+export const leaveSessionFailure = createAction(
+  ActionTypes.LeaveSessionFailure,
+  props<{ error: HttpErrorResponse }>()
+);
+
+
 // Get Session Actions
 
 export const getSession = createAction(
