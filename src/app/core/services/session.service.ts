@@ -48,6 +48,18 @@ export class SessionService {
   }
 
   /**
+   * Leave a session by public id on the server.
+   * @param sessionId
+   */
+  leaveSession(sessionId: string): Observable<SessionModel> {
+    return this.http.post<SessionModel>(`${this.url}/${sessionId}/leave`, {}, { observe: 'response', ...this.httpOptions })
+      .pipe(
+        tap(response => this.authService.removeAuthorizationToken()),
+        map(response => response.body as SessionModel)
+      );
+  }
+
+  /**
    * Get a session by public id from server.
    * @param sessionId
    */
