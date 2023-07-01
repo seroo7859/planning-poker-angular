@@ -71,7 +71,7 @@
   color: var(--deck-card-back-hover-color);
 }
 
-:host-context(.list-group.flex-wrap) .deck-card.flipped .deck-card-content {
+.deck-card.flipped .deck-card-content {
   transition: transform 0.8s;
   transform: rotateY(180deg);
 }

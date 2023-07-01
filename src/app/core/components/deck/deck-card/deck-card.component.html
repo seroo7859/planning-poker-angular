@@ -14,7 +14,12 @@
       </ng-container>
     </div>
     <div class="deck-card-back">
-      <i class="bi bi-suit-spade-fill fs-2"></i>
+      <ng-template [ngIf]="backSide" [ngIfElse]="defaultBackSiteContent">
+        <ng-container [ngTemplateOutlet]="backSide"></ng-container>
+      </ng-template>
+      <ng-template #defaultBackSiteContent>
+        <i class="bi bi-suit-spade-fill fs-2"></i>
+      </ng-template>
     </div>
   </div>
 </div>
