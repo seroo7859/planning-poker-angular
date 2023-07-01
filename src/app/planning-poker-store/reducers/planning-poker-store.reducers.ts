@@ -9,6 +9,9 @@ import {
   joinSession,
   joinSessionSuccess,
   joinSessionFailure,
+  leaveSession,
+  leaveSessionSuccess,
+  leaveSessionFailure,
   getSession,
   getSessionSuccess,
   getSessionFailure
@@ -21,6 +24,8 @@ import {
   currentUserDisconnected
 } from "./user.reducers";
 import {
+  renameTeamSuccess,
+  teamRenamed,
   teamMemberJoined,
   teamMemberLeaved,
   teamMemberConnected,
@@ -36,24 +41,43 @@ import {
   backlogItemUpdated,
   backlogRenamed,
   clearBacklogSuccess,
+  collapseBacklog,
   importBacklogSuccess,
   moveBacklogItemSuccess,
   removeBacklogItemSuccess,
   renameBacklogSuccess,
   updateBacklogItemSuccess
 } from "./backlog.reducers";
+import {
+  estimationGiven,
+  estimationRoundFinished,
+  estimationRoundStarted,
+  estimationSummaryReceived,
+  finishEstimationRoundSuccess,
+  getEstimationSummarySuccess,
+  giveEstimationSuccess,
+  nextEstimationRoundSuccess,
+  startEstimationRoundSuccess
+} from "./estimation.reducers";
+import { selectCard, deselectCard } from "./deck.reducers";
+import { collapseDiscussion } from "./discussion.reducers";
 
 export const storeFeatureKey = 'planning-poker-store';
 
 const planningPokerStoreReducers = createReducer(
   planningPokerStoreStateInitial,
   addDeck,
+  selectCard,
+  deselectCard,
   createSession,
   createSessionSuccess,
   createSessionFailure,
   joinSession,
   joinSessionSuccess,
   joinSessionFailure,
+  leaveSession,
+  leaveSessionSuccess,
+  leaveSessionFailure,
   getSession,
   getSessionSuccess,
   getSessionFailure,
@@ -62,6 +86,8 @@ const planningPokerStoreReducers = createReducer(
   getCurrentUserFailure,
   currentUserConnected,
   currentUserDisconnected,
+  renameTeamSuccess,
+  teamRenamed,
   teamMemberJoined,
   teamMemberLeaved,
   teamMemberConnected,
@@ -72,6 +98,7 @@ const planningPokerStoreReducers = createReducer(
   backlogRenamed,
   clearBacklogSuccess,
   backlogCleared,
+  collapseBacklog,
   addBacklogItemSuccess,
   backlogItemAdded,
   removeBacklogItemSuccess,
@@ -79,7 +106,17 @@ const planningPokerStoreReducers = createReducer(
   updateBacklogItemSuccess,
   backlogItemUpdated,
   moveBacklogItemSuccess,
-  backlogItemMoved
+  backlogItemMoved,
+  startEstimationRoundSuccess,
+  estimationRoundStarted,
+  nextEstimationRoundSuccess,
+  finishEstimationRoundSuccess,
+  estimationRoundFinished,
+  getEstimationSummarySuccess,
+  estimationSummaryReceived,
+  giveEstimationSuccess,
+  estimationGiven,
+  collapseDiscussion
 );
 
 export const reducer = (state: PlanningPokerStoreStateModel | undefined, action: Action): any => planningPokerStoreReducers(state, action);
