@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DashboardRoutingModule } from './dashboard-routing.module';
-import { DashboardComponent } from './dashboard.component';
+import { SessionboardRoutingModule } from './sessionboard-routing.module';
+import { SessionboardComponent } from './sessionboard.component';
 import {
   NgbActiveOffcanvas,
   NgbCollapseModule,
@@ -22,14 +22,14 @@ import { NgChartsModule } from "ng2-charts";
 
 @NgModule({
   declarations: [
-    DashboardComponent,
+    SessionboardComponent,
     BacklogComponent,
     EstimationComponent,
     DiscussionComponent
   ],
   imports: [
     CommonModule,
-    DashboardRoutingModule,
+    SessionboardRoutingModule,
     NgbDropdownModule,
     NgbTooltipModule,
     NgbToastModule,
@@ -62,4 +62,4 @@ import { NgChartsModule } from "ng2-charts";
     NgbActiveOffcanvas
   ],
 })
-export class DashboardModule { }
+export class SessionboardModule { }

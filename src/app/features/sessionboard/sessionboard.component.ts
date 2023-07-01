@@ -12,11 +12,11 @@ import { BacklogActions, EstimationActions, TeamActions, UserActions } from "../
 import { UserRoleModel } from "../../core/models/user.model";
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  selector: 'app-sessionboard',
+  templateUrl: './sessionboard.component.html',
+  styleUrls: ['./sessionboard.component.scss']
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class SessionboardComponent implements OnInit, OnDestroy {
 
   isBacklogCollapsed: boolean = false;
   isDiscussionCollapsed: boolean = false;

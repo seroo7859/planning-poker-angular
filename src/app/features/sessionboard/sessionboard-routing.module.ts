@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from "./dashboard.component";
+import { SessionboardComponent } from "./sessionboard.component";
 import { sessionGuard } from "../../core/guards/session.guard";
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent,
+    component: SessionboardComponent,
     pathMatch: 'full',
     canActivate: [sessionGuard]
   },
   {
     path: ':id',
-    component: DashboardComponent,
+    component: SessionboardComponent,
     canActivate: [sessionGuard]
   }
 ];
@@ -21,4 +21,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class DashboardRoutingModule { }
+export class SessionboardRoutingModule { }

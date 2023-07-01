@@ -27,7 +27,7 @@ export class SessionEffects {
   createSessionSuccessRedirect$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SessionActions.createSessionSuccess),
-      exhaustMap((action) => this.router.navigate(['app', 'dashboard', action.session.id]))
+      exhaustMap((action) => this.router.navigate(['app', 'sessionboard', action.session.id]))
     );
   }, { dispatch: false });
 
@@ -46,7 +46,7 @@ export class SessionEffects {
   joinSessionSuccessRedirect$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SessionActions.joinSessionSuccess),
-      exhaustMap((action) => this.router.navigate(['app', 'dashboard', action.session.id]))
+      exhaustMap((action) => this.router.navigate(['app', 'sessionboard', action.session.id]))
     );
   }, { dispatch: false });
 
@@ -65,7 +65,7 @@ export class SessionEffects {
   leaveSessionSuccessRedirect$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SessionActions.leaveSessionSuccess),
-      exhaustMap((action) => this.router.navigateByUrl(`app/onboarding/join-session?id=${action.session.id}`))
+      exhaustMap((action) => this.router.navigate(['app', 'onboarding', 'join-session'], { queryParams: { id: action.session.id } }))
     );
   }, { dispatch: false });
 

@@ -19,8 +19,8 @@ const routes: Routes = [
         data: { preload: true }
       },
       {
-        path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.module').then((mod) => mod.DashboardModule),
+        path: 'sessionboard',
+        loadChildren: () => import('./sessionboard/sessionboard.module').then((mod) => mod.SessionboardModule),
         data: { preload: true },
         canActivate: [authGuard]
       },
