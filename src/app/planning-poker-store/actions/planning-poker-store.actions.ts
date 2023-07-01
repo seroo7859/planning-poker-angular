@@ -1,6 +1,9 @@
 export enum ActionTypes {
   AddDeck = '[Decks] Add Deck',
 
+  SelectCard   = '[Deck] Select Card',
+  DeselectCard = '[Deck] Deselect Card',
+
   CreateSession        = '[Session] Create Session',
   CreateSessionSuccess = '[Session] Create Session Success',
   CreateSessionFailure = '[Session] Create Session Failure',
@@ -8,6 +11,10 @@ export enum ActionTypes {
   JoinSession        = '[Session] Join Session',
   JoinSessionSuccess = '[Session] Join Session Success',
   JoinSessionFailure = '[Session] Join Session Failure',
+
+  LeaveSession        = '[Session] Leave Session',
+  LeaveSessionSuccess = '[Session] Leave Session Success',
+  LeaveSessionFailure = '[Session] Leave Session Failure',
 
   GetSession        = '[Session] Get Session',
   GetSessionSuccess = '[Session] Get Session Success',
@@ -19,10 +26,18 @@ export enum ActionTypes {
   CurrentUserConnected    = '[User] Current User Connected',
   CurrentUserDisconnected = '[User] Current User Disconnected',
 
+  RenameTeam        = '[Team] Rename Team ',
+  RenameTeamSuccess = '[Team] Rename Team Success',
+  RenameTeamFailure = '[Team] Rename Team Failure',
+  TeamRenamed       = '[Team] Team Renamed',
+
   TeamMemberJoined       = '[Team] Team Member Joined',
   TeamMemberLeaved       = '[Team] Team Member Leaved',
   TeamMemberConnected    = '[Team] Team Member Connected',
   TeamMemberDisconnected = '[Team] Team Member Disconnected',
+
+  CollapseDiscussion = '[Discussion] Collapse Discussion',
+  CollapseBacklog    = '[Backlog] Collapse Backlog',
 
   ImportBacklog        = '[Backlog] Import Backlog',
   ImportBacklogSuccess = '[Backlog] Import Backlog Success',
@@ -61,5 +76,29 @@ export enum ActionTypes {
   MoveBacklogItem        = '[Backlog] Move Backlog Item',
   MoveBacklogItemSuccess = '[Backlog] Move Backlog Item Success',
   MoveBacklogItemFailure = '[Backlog] Move Backlog Item Failure',
-  BacklogItemMoved       = '[Backlog] Backlog Item Moved'
+  BacklogItemMoved       = '[Backlog] Backlog Item Moved',
+
+  StartEstimationRound        = '[Estimation] Start Estimation Round',
+  StartEstimationRoundSuccess = '[Estimation] Start Estimation Round Success',
+  StartEstimationRoundFailure = '[Estimation] Start Estimation Round Failure',
+  EstimationRoundStarted      = '[Estimation] Estimation Round Started',
+
+  NextEstimationRound        = '[Estimation] Next Estimation Round',
+  NextEstimationRoundSuccess = '[Estimation] Next Estimation Round Success',
+  NextEstimationRoundFailure = '[Estimation] Next Estimation Round Failure',
+
+  FinishEstimationRound        = '[Estimation] Finish Estimation Round',
+  FinishEstimationRoundSuccess = '[Estimation] Finish Estimation Round Success',
+  FinishEstimationRoundFailure = '[Estimation] Finish Estimation Round Failure',
+  EstimationRoundFinished      = '[Estimation] Estimation Round Finished',
+
+  GetEstimationSummary        = '[Estimation] Get Estimation Summary',
+  GetEstimationSummarySuccess = '[Estimation] Get Estimation Summary Success',
+  GetEstimationSummaryFailure = '[Estimation] Get Estimation Summary Failure',
+  EstimationSummaryReceived   = '[Estimation] Estimation Summary Received',
+
+  GiveEstimation        = '[Estimation] Give Estimation',
+  GiveEstimationSuccess = '[Estimation] Give Estimation Success',
+  GiveEstimationFailure = '[Estimation] Give Estimation Failure',
+  EstimationGiven       = '[Estimation] Estimation Given'
 }
