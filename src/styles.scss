@@ -160,6 +160,31 @@ h6 {
   user-select: none;
 }
 
+.text-responsive {
+  font-size: calc(0.01rem + 1vw + 1vh);
+}
+
+@media (min-width: 320px) {
+  .fs-xs-6 {
+    font-size: 1rem!important;
+  }
+  .d-xs-inline {
+    display: inline !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .fs-sm-5 {
+    font-size: 1.25rem!important;
+  }
+}
+
+@media (min-width: 768px) {
+  .fs-md-4 {
+    font-size: calc(1.275rem + .3vw)!important;
+  }
+}
+
 
 /* Scrollbar
  ------------------------------------------------------------ */
@@ -201,6 +226,14 @@ h6 {
   --bs-btn-hover-color: white;
   --bs-btn-hover-bg: var(--bs-warning);
   --bs-btn-hover-border-color: var(--bs-warning);
+}
+
+.btn.disabled, .btn:disabled, fieldset:disabled .btn {
+  --bs-btn-active-color: var(--bs-btn-disabled-color);
+  --bs-btn-active-bg: var(--bs-btn-disabled-bg);
+  --bs-btn-active-border-color: var(--bs-btn-disabled-border-color);
+  cursor: not-allowed;
+  pointer-events: auto;
 }
 
 
