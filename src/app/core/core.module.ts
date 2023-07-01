@@ -22,10 +22,12 @@ import { ToastsComponent } from './components/toasts/toasts.component';
     SessionIdValidatorDirective,
     ToastsComponent
   ],
-  exports: [
-    SessionIdValidatorDirective,
-    ToastsComponent
-  ],
+    exports: [
+        SessionIdValidatorDirective,
+        DeckComponent,
+        ToastsComponent,
+        DeckCardComponent
+    ],
   imports: [
     CommonModule,
     FormsModule,
