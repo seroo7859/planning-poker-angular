@@ -1,5 +1,5 @@
-<div *ngIf="(backlog$ | async) as backlog" class="offcanvas-lg offcanvas-start bg-body-secondary h-100" data-bs-scroll="false" data-bs-backdrop="true" tabindex="-1" id="offcanvasBacklog" aria-labelledby="offcanvasBacklogLabel">
-  <div *ngIf="(user$ | async) as user" class="offcanvas-body d-flex flex-column px-1 py-lg-3 h-100">
+<ng-container *ngIf="(backlog$ | async) as backlog">
+  <div *ngIf="(user$ | async) as user" class="offcanvas-body d-flex flex-column px-1 py-lg-3 bg-body-secondary vh-100">
     <div class="d-flex flex-nowrap justify-content-between align-items-center gap-2 px-3 mx-2">
       <h3 class="offcanvas-title me-auto lh-1 mb-0" id="offcanvasBacklogLabel">Backlog</h3>
       <div *ngIf="user.role === 'MODERATOR'" class="dropdown-center">
@@ -38,31 +38,32 @@
       </div>
     </div>
     <ol id="backlog-items" class="list-group list-group-flush gap-2 px-3 mx-2 mb-2 overflow-x-hidden overflow-y-auto small" (mouseenter)="handleMouseEnter($event)" (mouseleave)="handleMouseLeave($event)">
-      <li *ngFor="let backlogItem of backlog.items;" class="list-group-item list-group-item-action rounded-3" tabindex="0" [attr.data-backlog-item-number]="backlogItem.number" (click)="handleClick($event, backlogItem)">
+      <li *ngFor="let backlogItem of backlog.items;" class="list-group-item list-group-item-action rounded-3" tabindex="0"
+          [class.active]="isEstimatingBacklogItem(backlogItem)" [attr.data-backlog-item-number]="backlogItem.number" (click)="handleClick($event, backlogItem)">
         <div class="d-flex justify-content-between align-items-center">
           <p class="fw-bold text-noselect my-1">{{ backlogItem.number }}</p>
-          <div *ngIf="user.role === 'MODERATOR'" class="dropdown-center">
-            <button class="btn btn-light text-dark bg-transparent border-0 p-0 fs-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <div *ngIf="user.role === 'MODERATOR'" ngbDropdown display="dynamic" placement="bottom-end" container="body">
+            <button class="btn btn-light text-dark bg-transparent border-0 p-0 fs-5" [class.dropdown-toggle]="false" type="button" ngbDropdownToggle aria-expanded="false">
               <i class="bi bi-three-dots text-dark" placement="top" container="body" ngbTooltip="Options"></i>
             </button>
-            <ul class="dropdown-menu shadow border-secondary-subtle py-0">
-              <li><button type="button" class="btn btn-sm btn-outline-dark dropdown-item border-bottom border-secondary-subtle rounded-0 rounded-top py-2" (click)="editBacklogItem(backlogItem)"><i class="bi bi-pencil-fill pe-2"></i> Edit</button></li>
-              <li><button type="button" class="btn btn-sm btn-outline-dark dropdown-item rounded-0 rounded-bottom py-2" (click)="removeBacklogItem(backlogItem.number)"><i class="bi bi-trash-fill pe-2"></i> Delete</button></li>
+            <ul ngbDropdownMenu class="shadow border-secondary-subtle py-0">
+              <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item border-bottom border-secondary-subtle rounded-0 rounded-top py-2" (click)="editBacklogItem(backlogItem)"><i class="bi bi-pencil-fill pe-2"></i> Edit</button></li>
+              <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item rounded-0 rounded-bottom py-2" (click)="removeBacklogItem(backlogItem.number)"><i class="bi bi-trash-fill pe-2"></i> Delete</button></li>
             </ul>
           </div>
         </div>
         <p class="mb-2 text-wrap text-break text-noselect">{{ backlogItem.title }}</p>
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="badge bg-warning rounded-pill fw-normal text-noselect" style="font-size: 0.85em;">{{ backlogItem.estimation }}<i *ngIf="!backlogItem.estimation" class="bi bi-dash"></i></span>
-          <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-sm btn-secondary rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;">Estimate
-            <i [ngClass]="backlogItem.estimation && backlogItem.estimation.length > 0 ? 'bi-repeat' : 'bi-arrow-right'" class="bi small ps-1"></i>
+          <span class="badge bg-warning rounded-pill fw-normal text-noselect" style="font-size: 0.85em;">{{ backlogItem.estimation }}<i *ngIf="!backlogItem.estimation" class="bi bi-dash text-stroke-thin"></i></span>
+          <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-sm btn-secondary rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;" (click)="estimateBacklogItem(backlogItem)">Estimate
+            <i [ngClass]="backlogItem.estimation && backlogItem.estimation.length > 0 ? 'bi-repeat' : 'bi-arrow-right'" class="bi small text-stroke-thin ps-1"></i>
           </button>
         </div>
       </li>
     </ol>
     <p class="text-center small pt-2 px-3 mx-2 mt-auto mb-1">{{ getNumberOfEstimatedBacklogItems(backlog) }} of {{ backlog.items.length }} estimated</p>
   </div>
-</div>
+</ng-container>
 
 <ng-template #addBacklogItemModalContent let-modal>
   <div class="container pb-2">
@@ -75,7 +76,7 @@
         <div class="mb-3">
           <div class="form-floating">
             <input id="add-backlog-item-title" name="title" ngModel required type="text" class="form-control rounded-pill shadow-sm border-1 px-4"
-                   placeholder="Title" pattern="[A-Za-z0-9 _\-]+" minlength="1" maxlength="64" spellcheck="false"
+                   placeholder="Title" pattern="[A-Za-z0-9 _\-]+" minlength="1" maxlength="64" spellcheck="false" ngbAutofocus
                    #backlogItemTitle='ngModel'
                    [class.is-valid]="(backlogItemTitle.value || addBacklogItemForm.submitted) && backlogItemTitle.valid"
                    [class.is-invalid]="(backlogItemTitle.value || addBacklogItemForm.submitted) && backlogItemTitle.invalid">
@@ -180,6 +181,23 @@
     <div class="modal-footer border-top-0 justify-content-center">
       <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-secondary rounded-pill shadow-sm px-4 me-3" (click)="modal.dismiss('Cancel click')">Cancel</button>
       <button *ngIf="user.role === 'MODERATOR'" form="editBacklogItemForm" type="submit" ngbAutofocus class="btn btn-warning rounded-pill shadow-sm text-white px-4">Save</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #estimateBacklogItemModalContent let-modal>
+  <div class="container pb-2">
+    <div class="modal-header border-bottom-0">
+      <h1 class="modal-title text-center w-100 fs-4 fw-bold">Estimate Backlog Item</h1>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <p class="mb-1">The backlog item <span class="text-decoration-underline">{{ round?.backlogItemNumber }}</span> is estimating.</p>
+      <p class="mb-2">Finish the current estimation to start the next estimation.</p>
+    </div>
+    <div class="modal-footer border-top-0 justify-content-center">
+      <button type="button" class="btn btn-secondary rounded-pill shadow-sm px-4 me-3" (click)="modal.dismiss('Cancel click')">Cancel</button>
+      <button type="button" ngbAutofocus class="btn btn-warning rounded-pill shadow-sm text-white px-4" (click)="modal.close('Ok click')">Ok</button>
     </div>
   </div>
 </ng-template>

@@ -1,11 +1,17 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscription, take } from "rxjs";
 import { Store } from "@ngrx/store";
-import { BacklogSelectors, DeckSelectors, UserSelectors } from "../../../planning-poker-store/selectors";
+import {
+  BacklogSelectors,
+  DeckSelectors,
+  EstimationSelectors,
+  UserSelectors
+} from "../../../planning-poker-store/selectors";
 import { BacklogItemModel, BacklogModel } from "../../../core/models/backlog.model";
-import { BacklogActions } from "../../../planning-poker-store/actions";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { BacklogActions, EstimationActions } from "../../../planning-poker-store/actions";
+import { NgbActiveOffcanvas, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { DeckModel } from "../../../core/models/deck.model";
+import { EstimationRoundModel } from "../../../core/models/estimation.model";
 import Sortable from "sortablejs";
 
 @Component({
@@ -17,6 +23,7 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   backlog$: Observable<any> = new Observable<any>();
   deck$: Observable<any> = new Observable<any>();
+  round$: Observable<any> = new Observable<any>();
   user$: Observable<any> = new Observable<any>();
 
   private subscription: Subscription = new Subscription();
@@ -30,14 +37,23 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('editBacklogItemModalContent')
   editBacklogItemModalContent: ElementRef | undefined;
 
-  selectedBacklogItem?: BacklogItemModel;
+  @ViewChild('estimateBacklogItemModalContent')
+  estimateBacklogItemModalContent: ElementRef | undefined;
 
-  constructor(private readonly store: Store, private modalService: NgbModal) {}
+  selectedBacklogItem?: BacklogItemModel;
+  round?: EstimationRoundModel;
+
+  constructor(private readonly store: Store, private modalService: NgbModal, public activeOffcanvas: NgbActiveOffcanvas) {}
 
   ngOnInit() {
     this.backlog$ = this.store.select(BacklogSelectors.selectBacklog);
     this.deck$ = this.store.select(DeckSelectors.selectDeck);
+    this.round$ = this.store.select(EstimationSelectors.selectEstimationRound);
     this.user$ = this.store.select(UserSelectors.selectUser);
+
+    this.subscription.add(
+      this.round$.subscribe(round => this.round = round)
+    );
   }
 
   ngAfterViewInit() {
@@ -109,7 +125,8 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handleClick(event: Event, backlogItem: BacklogItemModel) {
     const element: HTMLElement = event.target as HTMLElement;
-    if (element.nodeName === 'BUTTON' || element.nodeName === 'I') {
+    const li = element.closest('li') as HTMLElement;
+    if (element.nodeName === 'BUTTON' || element.nodeName === 'I' || li.classList.contains('active')) {
       return;
     }
     this.editBacklogItem(backlogItem);
@@ -159,6 +176,29 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
       }, (reason) => {
         console.log('Dismissed:', reason);
       });
+  }
+
+  estimateBacklogItem(backlogItem: BacklogItemModel) {
+    if (this.isRoundStarted()) {
+      // Open estimate backlog item modal
+      const modalRef = this.modalService.open(this.estimateBacklogItemModalContent);
+      modalRef.result
+        .then((result) => {
+          console.log('Closed with:', result);
+        }, (reason) => {
+          console.log('Dismissed:', reason);
+        });
+      return;
+    }
+    this.store.dispatch(EstimationActions.startEstimationRound({ backlogItemNumber: backlogItem.number }));
+  }
+
+  isRoundStarted() {
+    return this.round !== undefined && this.round.startedAt !== undefined && this.round.finishedAt === undefined;
+  }
+
+  isEstimatingBacklogItem(backlogItem: BacklogItemModel) {
+    return this.isRoundStarted() && backlogItem.number === this.round?.backlogItemNumber;
   }
 
 }
