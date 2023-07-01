@@ -152,7 +152,7 @@ export class BacklogEffects {
   backlogItemAddedToast$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(BacklogActions.backlogItemAdded),
-      map(({ backlogItem }) => this.toastService.showInfo({ text: `Backlog item '${backlogItem.number + ': ' + backlogItem.title}' added` }))
+      map(({ backlogItem }) => this.toastService.showInfo({ text: `Backlog item '${backlogItem.number + ' – ' + backlogItem.title}' added` }))
     );
   }, { dispatch: false });
 
@@ -172,7 +172,7 @@ export class BacklogEffects {
   backlogItemRemovedToast$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(BacklogActions.backlogItemRemoved),
-      map(({ backlogItem }) => this.toastService.showInfo({ text: `Backlog item '${backlogItem.number + ': ' + backlogItem.title}' removed` }))
+      map(({ backlogItem }) => this.toastService.showInfo({ text: `Backlog item '${backlogItem.number + ' – ' + backlogItem.title}' removed` }))
     );
   }, { dispatch: false });
 
@@ -192,7 +192,7 @@ export class BacklogEffects {
   backlogItemUpdatedToast$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(BacklogActions.backlogItemUpdated),
-      map(({ backlogItem }) => this.toastService.showInfo({ text: `Backlog item '${backlogItem.number + ': ' + backlogItem.title}' updated` }))
+      map(({ backlogItem }) => this.toastService.showInfo({ text: `Backlog item '${backlogItem.number + ' – ' + backlogItem.title}' updated` }))
     );
   }, { dispatch: false });
 
@@ -212,7 +212,7 @@ export class BacklogEffects {
   backlogItemMovedToast$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(BacklogActions.backlogItemMoved),
-      map(({ backlogItem }) => this.toastService.showInfo({ text: `Backlog item '${backlogItem.number + ': ' + backlogItem.title}' moved` }))
+      map(({ backlogItem }) => this.toastService.showInfo({ text: `Backlog item '${backlogItem.number + ' – ' + backlogItem.title}' moved` }))
     );
   }, { dispatch: false });
 
