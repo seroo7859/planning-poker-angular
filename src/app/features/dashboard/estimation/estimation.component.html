@@ -1,0 +1,117 @@
+<div *ngIf="(user$ | async) as user" class="vstack h-100 overflow-x-hidden overflow-y-auto">
+  <div class="d-flex flex-nowrap justify-content-between align-items-center gap-2 mx-1 px-4">
+    <h3 class="pt-1 lh-1 mb-0">Estimate</h3>
+    <div class="d-flex justify-content-end align-items-center pt-3">
+      <div class="text-end small me-2">
+        <p class="fw-bold mb-0">{{ user.name }}</p>
+        <p class="mb-0">{{ user.role | titlecase }}</p>
+      </div>
+      <div ngbDropdown display="dynamic" placement="bottom-end" container="body">
+        <button class="btn btn-light text-dark bg-transparent border-0 p-0 fs-5" [class.dropdown-toggle]="false" type="button" ngbDropdownToggle aria-expanded="false">
+          <svg class="bg-white rounded-circle border"
+               [ngClass]="user.active ? 'user-active' : 'user-inactive'"
+               [data-jdenticon-value]="user.name"
+               width="40" height="40"
+               placement="bottom" container="body" ngbTooltip="Menu">
+          </svg>
+        </button>
+        <ul ngbDropdownMenu class="shadow border-secondary-subtle py-0">
+          <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-none d-lg-inline-block border-bottom border-secondary-subtle rounded-0 rounded-top py-2" (click)="collapseBacklog()"><i class="bi bi-layers text-stroke-thin pe-2"></i> Backlog</button></li>
+          <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-lg-none border-bottom border-secondary-subtle rounded-0 rounded-top py-2" (click)="openBacklogOffcanvas()"><i class="bi bi-layers text-stroke-thin pe-2"></i> Backlog</button></li>
+          <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-none d-lg-inline-block border-bottom border-secondary-subtle py-2" (click)="collapseDiscussion()"><i class="bi bi-chat-text text-stroke-thin pe-2"></i> Discuss</button></li>
+          <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-lg-none border-bottom border-secondary-subtle py-2" (click)="openDiscussionOffcanvas()"><i class="bi bi-chat-text text-stroke-thin pe-2"></i> Discuss</button></li>
+          <li><button *ngIf="(session$ | async) as session" ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item rounded-0 rounded-bottom py-2" (click)="leaveSession(session.data)"><i class="bi bi-box-arrow-right text-stroke-thin pe-2"></i> Leave</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="(team$ | async) as team" class="d-flex justify-content-between align-items-center mx-1 px-4">
+    <p #teamName class="text-start small text-pre overflow-hidden mb-3" style="width: calc(8rem + 5vw);"
+       [contentEditable]="user.role === 'MODERATOR'" spellcheck="false"
+       (focusout)="teamName.innerText.trim() !== team.name ? renameTeam(teamName.innerText) : $event.preventDefault()"
+       (keydown.enter)="$event.preventDefault(); teamName.blur()"
+       (keydown.escape)="teamName.blur()">{{ team.name }}</p>
+  </div>
+
+  <div *ngIf="backlog && backlog.items.length > 0" class="d-flex flex-nowrap justify-content-between mx-1 px-4 mb-2">
+    <div class="btn-group gap-3">
+      <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-sm rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;"
+              [ngClass]="isRoundStarted() ? 'btn-secondary disabled' : 'btn-success'"
+              [disabled]="isRoundStarted()"
+              (click)="nextRound()">
+        <span class="d-none d-xs-inline">Next </span>
+        <i class="bi bi-play text-stroke-thin"></i>
+      </button>
+      <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-sm rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;"
+              [ngClass]="isRoundFinished() ? 'btn-secondary disabled' : 'btn-danger'"
+              [disabled]="isRoundFinished()"
+              (click)="finishRound()">
+        <span class="d-none d-xs-inline">Finish </span>
+        <i class="bi bi-stop text-stroke-thin"></i>
+      </button>
+    </div>
+    <span [class.text-danger]="isRoundFinished()"><time>{{ time }}</time><i class="bi bi-clock text-stroke-thin ps-2"></i></span>
+  </div>
+
+  <div class="d-flex flex-column justify-content-between h-100 overflow-x-hidden overflow-y-auto">
+    <div *ngIf="estimationRecords.length > 0" class="row row-cols-3 row-cols-sm-4 mx-0 mt-0 mb-2 g-3">
+      <div *ngFor="let estimationRecord of estimationRecords;" class="col">
+        <app-deck-card [size]="'sm'" [selectable]="false" [deckCard]="estimationRecord.card" [backSide]="isEstimating(estimationRecord) ? estimating : undefined"></app-deck-card>
+        <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center mt-2 gap-2">
+          <svg class="bg-white rounded-circle border" [ngClass]="estimationRecord.estimator.active ? 'user-active' : 'user-inactive'" [data-jdenticon-value]="estimationRecord.estimator.name" width="32" height="32"></svg>
+          <p class="text-start smaller lh-1 mb-0" [class.fw-bold]="estimationRecord.estimator.name === user.name">{{ estimationRecord.estimator.name }}</p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isRoundFinished()" class="row mx-2 mt-3 mb-4 pe-2">
+      <div class="col-12 col-sm-6">
+        <div *ngIf="summary" class="position-relative w-75 mx-auto" style="height: 40vh;">
+          <canvas baseChart class="chart"
+                  [type]="doughnutChartType"
+                  [data]="doughnutChartData"
+                  [options]="user.role === 'MODERATOR' ? doughnutChartOptions : removeClickEvent(doughnutChartOptions)"
+                  [plugins]="doughnutChartPlugins">
+          </canvas>
+          <div class="position-absolute top-50 start-50 translate-middle text-center" style="z-index: -1">
+            <p class="small lh-sm mb-0">
+              <ng-container *ngIf="summary.estimationResults.length === 0; then noEstimates; else (summary.consensusReached ? consensus : dissent)"></ng-container>
+              <ng-template #noEstimates>
+                No<br>Estimates<br><span class="fs-xs-6 fs-sm-5">😐</span>
+              </ng-template>
+              <ng-template #consensus>
+                Consensus<br><span class="fs-xs-6 fs-sm-5">🥳</span>
+              </ng-template>
+              <ng-template #dissent>
+                  Dissent<br><span class="fs-xs-6 fs-sm-5">😕</span>
+              </ng-template>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 my-auto">
+        <div *ngIf="getBacklogItem(summary?.backlogItemNumber) as backlogItem" class="mt-4 mt-sm-0 w-100">
+          <p [ngClass]="backlogItem.description ? 'mb-0' : 'mb-2'"><span class="fw-bold">{{ backlogItem.number }}</span> – {{ backlogItem.title }}</p>
+          <textarea *ngIf="backlogItem.description" class="form-control-plaintext mb-2" rows="2" [innerText]="backlogItem.description" readonly></textarea>
+        </div>
+        <div class="btn-group gap-3">
+          <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-secondary btn-sm rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;" (click)="repeatRound()">
+            <span class="d-none d-sm-inline pe-1" style="padding-right: .2rem;">Repeat </span>
+            <i class="bi bi-repeat small text-stroke-thin"></i>
+          </button>
+          <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-success btn-sm rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;" (click)="nextRound()">
+            <span class="d-none d-sm-inline">Next </span>
+            <i class="bi bi-play text-stroke-thin"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isRoundStarted()" class="px-4 py-2 mt-auto">
+    <app-deck *ngIf="user.role !== 'SPECTATOR'" [wrap]="false" [size]="'md'" [deck]="deck$ | async" (cardSelected)="onCardSelected($event)"></app-deck>
+  </div>
+</div>
+
+<ng-template #estimating>
+  <span class="spinner-grow spinner-grow-sm text-secondary" role="status" style="--bs-spinner-animation-speed: 1s;"></span>
+</ng-template>
