@@ -94,6 +94,13 @@ export const backlogCleared = createAction(
 );
 
 
+// Collapse Backlog Action
+
+export const collapseBacklog = createAction(
+  ActionTypes.CollapseBacklog
+);
+
+
 // Add Backlog Item Actions
 
 export const addBacklogItem = createAction(
