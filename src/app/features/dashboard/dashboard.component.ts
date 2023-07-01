@@ -1,9 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { Observable, Subscription, take, withLatestFrom } from "rxjs";
-import { SessionSelectors, UserSelectors } from "../../planning-poker-store/selectors";
+import {
+  BacklogSelectors,
+  DiscussionSelector,
+  SessionSelectors,
+  UserSelectors
+} from "../../planning-poker-store/selectors";
 import { RxStompService } from "../../core/services/rx-stomp.service";
-import { BacklogActions, TeamActions, UserActions } from "../../planning-poker-store/actions";
+import { BacklogActions, EstimationActions, TeamActions, UserActions } from "../../planning-poker-store/actions";
 import { UserRoleModel } from "../../core/models/user.model";
 
 @Component({
@@ -14,19 +19,29 @@ import { UserRoleModel } from "../../core/models/user.model";
 export class DashboardComponent implements OnInit, OnDestroy {
 
   isBacklogCollapsed: boolean = false;
-  isDiscussCollapsed: boolean = false;
+  isDiscussionCollapsed: boolean = false;
 
   session$: Observable<any> = new Observable<any>();
   user$: Observable<any> = new Observable<any>();
+  backlog$: Observable<any> = new Observable<any>();
+  discussion$: Observable<any> = new Observable<any>();
 
   private sessionSubscription: Subscription = new Subscription();
+  private backlogSubscription: Subscription = new Subscription();
+  private discussionSubscription: Subscription = new Subscription();
 
-  constructor(private readonly store: Store, private rxStompService: RxStompService) {}
+  constructor(private readonly store: Store, private rxStompService: RxStompService) {
+    this.rxStompService.connect();
+  }
 
   ngOnInit(): void {
     this.session$ = this.store.select(SessionSelectors.selectSession);
     this.user$ = this.store.select(UserSelectors.selectUser);
+    this.backlog$ = this.store.select(BacklogSelectors.selectBacklog);
+    this.discussion$ = this.store.select(DiscussionSelector.selectDiscussion);
     this.subscribeSession();
+    this.subscribeBacklog();
+    this.subscribeDiscussion();
   }
 
   private subscribeSession() {
@@ -65,6 +80,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
             );
 
             if(user.role !== UserRoleModel.MODERATOR) {
+              this.sessionSubscription.add(
+                this.rxStompService
+                  .watch(`/session/${sessionId}/team/renamed`)
+                  .subscribe((message) => this.store.dispatch(TeamActions.teamRenamed({ name: JSON.parse(message.body).name })))
+              );
+
               this.sessionSubscription.add(
                 this.rxStompService
                   .watch(`/session/${sessionId}/backlog/imported`)
@@ -109,7 +130,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     this.store.dispatch(BacklogActions.backlogItemMoved({ backlog: result.backlog, backlogItem: result.backlogItem, newIndex: result.newIndex }))
                   })
               );
+
+              this.sessionSubscription.add(
+                this.rxStompService
+                  .watch(`/session/${sessionId}/estimation/round/started`)
+                  .subscribe((message) => this.store.dispatch(EstimationActions.estimationRoundStarted({ estimationRound: JSON.parse(message.body) })))
+              );
+
+              this.sessionSubscription.add(
+                this.rxStompService
+                  .watch(`/session/${sessionId}/estimation/round/finished`)
+                  .subscribe((message) => this.store.dispatch(EstimationActions.estimationRoundFinished({ estimationRound: JSON.parse(message.body) })))
+              );
+
+              this.sessionSubscription.add(
+                this.rxStompService
+                  .watch(`/session/${sessionId}/estimation/round/summary`)
+                  .subscribe((message) => this.store.dispatch(EstimationActions.estimationSummaryReceived({ estimationSummary: JSON.parse(message.body) })))
+              );
             }
+
+            this.sessionSubscription.add(
+              this.rxStompService
+                .watch(`/session/${sessionId}/estimation/given`)
+                .subscribe((message) => this.store.dispatch(EstimationActions.estimationGiven({ estimation: JSON.parse(message.body) })))
+            );
 
             this.sessionSubscription.add(
               this.rxStompService.connected$
@@ -125,8 +170,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
+  private subscribeBacklog() {
+    this.backlogSubscription.add(
+      this.backlog$.subscribe(backlog => this.isBacklogCollapsed = backlog && backlog.collapsed !== undefined ? backlog.collapsed : false)
+    );
+  }
+
+  private subscribeDiscussion() {
+    this.discussionSubscription.add(
+      this.discussion$.subscribe(discussion => this.isDiscussionCollapsed = discussion && discussion.collapsed !== undefined ? discussion.collapsed : false)
+    );
+  }
+
+   ngOnDestroy(): void {
     this.sessionSubscription.unsubscribe();
+    this.backlogSubscription.unsubscribe();
+    this.discussionSubscription.unsubscribe();
+    this.rxStompService.disconnect();
   }
 
 }

@@ -3,33 +3,45 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
-import { NgbCollapseModule, NgbToastModule, NgbTooltipModule  } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbActiveOffcanvas,
+  NgbCollapseModule,
+  NgbDropdownModule,
+  NgbOffcanvasModule,
+  NgbToastModule,
+  NgbTooltipModule
+} from "@ng-bootstrap/ng-bootstrap";
 import { CoreModule } from "../../core/core.module";
 import { BacklogComponent } from './backlog/backlog.component';
-import { EstimateComponent } from './estimate/estimate.component';
-import { DiscussComponent } from './discuss/discuss.component';
+import { EstimationComponent } from './estimation/estimation.component';
+import { DiscussionComponent } from './discussion/discussion.component';
 import { JDENTICON_CONFIG, NgxJdenticonModule } from "ngx-jdenticon";
-import {FormsModule} from "@angular/forms";
-import {SharedModule} from "../../shared/shared.module";
+import { FormsModule } from "@angular/forms";
+import { SharedModule } from "../../shared/shared.module";
+import { NgChartsModule } from "ng2-charts";
 
 @NgModule({
   declarations: [
     DashboardComponent,
     BacklogComponent,
-    EstimateComponent,
-    DiscussComponent
+    EstimationComponent,
+    DiscussionComponent
   ],
-    imports: [
-        CommonModule,
-        DashboardRoutingModule,
-        NgbTooltipModule,
-        NgbToastModule,
-        NgbCollapseModule,
-        NgxJdenticonModule,
-        CoreModule,
-        FormsModule,
-        SharedModule
-    ],
+  imports: [
+    CommonModule,
+    DashboardRoutingModule,
+    NgbDropdownModule,
+    NgbTooltipModule,
+    NgbToastModule,
+    NgbCollapseModule,
+    NgbOffcanvasModule,
+    NgxJdenticonModule,
+    NgChartsModule,
+    CoreModule,
+    FormsModule,
+    SharedModule,
+    NgChartsModule
+  ],
   providers: [
     {
       // Custom identicon style
@@ -46,7 +58,8 @@ import {SharedModule} from "../../shared/shared.module";
         },
         backColor: "#0000"
       },
-    }
+    },
+    NgbActiveOffcanvas
   ],
 })
 export class DashboardModule { }

@@ -1,13 +1,17 @@
 <div class="container-fluid px-0">
   <div class="d-flex vh-100 justify-content-start align-items-stretch">
     <div class="col-lg-3" [(ngbCollapse)]="isBacklogCollapsed" [horizontal]="true" [animation]="true">
-      <app-backlog></app-backlog>
+      <div class="d-none d-lg-block">
+        <app-backlog></app-backlog>
+      </div>
     </div>
-    <div class="col-12 col-lg-6">
-      <app-estimate></app-estimate>
+    <div class="col-12 col-lg-6 flex-grow-1">
+      <app-estimation></app-estimation>
     </div>
-    <div class="col-lg-3" [(ngbCollapse)]="isDiscussCollapsed" [horizontal]="true" [animation]="true">
-      <app-discuss></app-discuss>
+    <div class="col-lg-3" [(ngbCollapse)]="isDiscussionCollapsed" [horizontal]="true" [animation]="true">
+      <div class="d-none d-lg-block">
+        <app-discussion></app-discussion>
+      </div>
     </div>
   </div>
 </div>
