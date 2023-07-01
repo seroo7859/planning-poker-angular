@@ -19,7 +19,6 @@ export const backlogImported = on(BacklogActions.backlogImported, (state: Planni
   return newState;
 });
 
-
 export const renameBacklogSuccess = on(BacklogActions.renameBacklogSuccess, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
   const newState: PlanningPokerStoreStateModel = cloneDeep(state);
   if (newState.session.data) {
@@ -48,6 +47,14 @@ export const backlogCleared = on(BacklogActions.backlogCleared, (state: Planning
   const newState: PlanningPokerStoreStateModel = cloneDeep(state);
   if (newState.session.data) {
     newState.session.data.backlog.items.splice(0, newState.session.data.backlog.items.length);
+  }
+  return newState;
+});
+
+export const collapseBacklog = on(BacklogActions.collapseBacklog, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
+  const newState: PlanningPokerStoreStateModel = cloneDeep(state);
+  if (newState.session.data) {
+    newState.session.data.backlog.collapsed = !newState.session.data.backlog.collapsed;
   }
   return newState;
 });
