@@ -1,7 +1,23 @@
 import { ActionType, on } from '@ngrx/store';
-import { TeamActions } from "../actions";
+import {BacklogActions, TeamActions} from "../actions";
 import { PlanningPokerStoreStateModel } from "../state/model/planning-poker-store.state.model";
 import cloneDeep from "lodash.clonedeep";
+
+export const renameTeamSuccess = on(TeamActions.renameTeamSuccess, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
+  const newState: PlanningPokerStoreStateModel = cloneDeep(state);
+  if (newState.session.data) {
+    newState.session.data.team = action.team;
+  }
+  return newState;
+});
+
+export const teamRenamed = on(TeamActions.teamRenamed, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
+  const newState: PlanningPokerStoreStateModel = cloneDeep(state);
+  if (newState.session.data) {
+    newState.session.data.team.name = action.name;
+  }
+  return newState;
+});
 
 export const teamMemberJoined = on(TeamActions.teamMemberJoined, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
   const newState: PlanningPokerStoreStateModel = cloneDeep(state);
