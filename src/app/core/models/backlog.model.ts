@@ -1,5 +1,6 @@
 export interface BacklogModel {
   name: string;
+  collapsed?: boolean;
   items: BacklogItemModel[]
 }
 
