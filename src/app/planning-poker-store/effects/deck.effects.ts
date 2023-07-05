@@ -47,7 +47,6 @@ export class DeckEffects {
       ofType(EstimationActions.finishEstimationRoundSuccess),
       withLatestFrom(this.store.select(UserSelectors.selectUser)),
       exhaustMap(([ { estimationRound }, user ]) => {
-        console.log(estimationRound);
         const estimationFound = estimationRound?.estimations.find(estimation => estimation.estimator === user?.name);
         if (estimationFound) {
           return of(DeckActions.deselectCard({ value: estimationFound.estimationValue }));
@@ -62,7 +61,6 @@ export class DeckEffects {
       ofType(EstimationActions.estimationRoundFinished),
       withLatestFrom(this.store.select(UserSelectors.selectUser)),
       exhaustMap(([ { estimationRound }, user ]) => {
-        console.log(estimationRound);
         const estimationFound = estimationRound?.estimations.find(estimation => estimation.estimator === user?.name);
         if (estimationFound) {
           return of(DeckActions.deselectCard({ value: estimationFound.estimationValue }));
