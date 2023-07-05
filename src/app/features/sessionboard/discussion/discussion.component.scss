@@ -1,0 +1,12 @@
+textarea.form-control {
+  resize: none;
+  min-height: 2rem;
+  transition-duration: 300ms;
+  transition-property: border-color, box-shadow, border-radius;
+}
+
+textarea.form-control.disabled ,
+textarea.form-control:disabled {
+  cursor: not-allowed;
+  pointer-events: auto;
+}

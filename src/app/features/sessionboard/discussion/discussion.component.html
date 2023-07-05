@@ -1,7 +1,79 @@
-<div class="offcanvas-body d-flex flex-column px-1 py-lg-3 bg-body-secondary vh-100">
-  <div class="d-flex flex-nowrap justify-content-between align-items-center gap-2 px-3 mx-2">
-    <h3 class="offcanvas-title me-auto lh-1 mb-0">Discuss</h3>
+<ng-container *ngIf="(discussion$ | async) as discussion">
+  <div *ngIf="(user$ | async) as user" class="offcanvas-body d-flex flex-column px-1 py-lg-3 bg-body-secondary vh-100">
+    <div class="d-flex flex-nowrap justify-content-between align-items-center gap-2 px-3 mx-2">
+      <h3 class="offcanvas-title me-auto lh-1 mb-0">Discuss</h3>
+      <button *ngIf="user.role === 'MODERATOR'" class="btn btn-dark btn-toggle-discuss rounded-circle border-0 p-3 position-relative" type="button"
+              [class.disabled]="discussion.active"
+              [disabled]="discussion.active"
+              (click)="startDiscussion(discussionTopic.innerText)">
+        <i class="bi bi-play-fill rounded-circle position-absolute translate-middle lh-md p-2"
+           [disableTooltip]="discussion.active" placement="bottom" container="body" ngbTooltip="Start"></i>
+      </button>
+      <button *ngIf="user.role === 'MODERATOR'" class="btn btn-dark rounded-circle border-0 p-3 position-relative" type="button"
+              [class.disabled]="!discussion.active"
+              [disabled]="!discussion.active"
+              (click)="endDiscussion()">
+        <i class="bi bi-stop-fill rounded-circle position-absolute translate-middle lh-md p-2"
+           [disableTooltip]="!discussion.active" placement="bottom" container="body" ngbTooltip="End"></i>
+      </button>
+    </div>
+    <div class="d-flex justify-content-between align-items-center pt-2 px-3 mx-2 mb-3 small">
+      <p #discussionTopic class="text-start text-pre w-75 overflow-hidden mb-0"
+         [contentEditable]="user.role === 'MODERATOR' && !discussion.active" spellcheck="false"
+         (keydown.enter)="$event.preventDefault(); discussionTopic.blur()"
+         (keydown.escape)="discussionTopic.blur()">{{ discussion.topic }}</p>
+    </div>
+
+    <ul id="discussion-posts" class="list-group list-group-flush gap-2 px-3 mx-2 mb-3 overflow-x-hidden overflow-y-auto small" (mouseenter)="handleMouseEnter($event)" (mouseleave)="handleMouseLeave($event)" (scroll)="handleScroll($event)">
+      <li *ngFor="let post of posts;" class="list-group-item bg-transparent border-0 p-0" tabindex="0">
+        <div class="d-flex justify-content-start align-items-start bg-white rounded-3 px-3 py-2">
+          <div class="order-first my-2 position-relative">
+            <svg class="bg-white border rounded-circle"
+                 [ngClass]="post.author.active ? 'user-active' : 'user-inactive'"
+                 [data-jdenticon-value]="post.author.name" width="32" height="32"></svg>
+          </div>
+          <div class="order-last text-start ms-3 mt-1 mb-2 w-100">
+            <p class="small text-wrap mb-1">
+              <span class="fw-bold">{{ post.author.name }}</span>
+              <span class="text-secondary ps-2 pe-1">•</span>
+              <time class="text-secondary"> {{ post.createdAt | dateAgo }}</time>
+            </p>
+            <div class="text-start text-pre-wrap text-break" [innerText]="post.content" ></div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="px-3 mx-2 mt-auto mb-2">
+      <div class="input-group justify-content-between align-items-center gap-2">
+        <div class="flex-fill w-75 position-relative">
+          <textarea id="post" class="form-control form-control-sm bg-white rounded-pill overflow-hidden ps-3 pe-5 py-2" placeholder="Write a post..."
+                    #textarea
+                    [(ngModel)]="textAreaValue"
+                    [rows]="textAreaRows" minlength="1" maxlength="512" autocomplete="off"
+                    (focus)="onTextAreaFocus($event)" (blur)="onTextAreaBlur($event)" (input)="onTextAreaInput($event)"
+                    (keydown.control.enter)="createPost()"
+                    [class.disabled]="!discussion.active"
+                    [disabled]="!discussion.active"
+                    [disableTooltip]="!discussion.active" placement="top" container="body" ngbTooltip="Write a post and press STRG+ENTER"></textarea>
+          <label for="post" class="col-form-label visually-hidden">Your post:</label>
+          <button id="btn-emoji-picker" type="button" class="btn btn-lg btn-light bg-white text-secondary rounded-circle shadow-sm border-0 p-2 me-3 z-1 position-absolute top-50 end-0 translate-middle-y"
+                  [class.disabled]="!discussion.active"
+                  [disabled]="!discussion.active">
+            <i class="bi bi-emoji-smile position-absolute top-50 start-50 translate-middle lh-1 p-2"
+               [disableTooltip]="!discussion.active" placement="top" container="body" ngbTooltip="Emoji"></i>
+          </button>
+        </div>
+        <button class="btn btn-lg text-white rounded-circle shadow-sm border-0 position-relative" style="padding: 1.2rem;" type="button"
+                [ngClass]="discussion.active ? 'btn-warning' : 'btn-secondary'"
+                [class.disabled]="!discussion.active"
+                [disabled]="!discussion.active"
+                (click)="createPost()">
+          <i class="bi bi-send-fill rounded-circle position-absolute translate-middle lh-0 p-2"
+             [disableTooltip]="!discussion.active" placement="top" container="body" ngbTooltip="Send"></i>
+        </button>
+      </div>
+    </div>
+
   </div>
-
-</div>
-
+</ng-container>
