@@ -10,3 +10,51 @@ export const collapseDiscussion = on(DiscussionActions.collapseDiscussion, (stat
   }
   return newState;
 });
+
+export const startDiscussionSuccess = on(DiscussionActions.startDiscussionSuccess, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
+  const newState: PlanningPokerStoreStateModel = cloneDeep(state);
+  if (newState.session.data) {
+    newState.session.data.discussion = action.discussion;
+  }
+  return newState;
+});
+
+export const discussionStarted = on(DiscussionActions.discussionStarted, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
+  const newState: PlanningPokerStoreStateModel = cloneDeep(state);
+  if (newState.session.data) {
+    newState.session.data.discussion = action.discussion;
+  }
+  return newState;
+});
+
+export const endDiscussionSuccess = on(DiscussionActions.endDiscussionSuccess, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
+  const newState: PlanningPokerStoreStateModel = cloneDeep(state);
+  if (newState.session.data) {
+    newState.session.data.discussion = action.discussion;
+  }
+  return newState;
+});
+
+export const discussionEnded = on(DiscussionActions.discussionEnded, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
+  const newState: PlanningPokerStoreStateModel = cloneDeep(state);
+  if (newState.session.data) {
+    newState.session.data.discussion = action.discussion;
+  }
+  return newState;
+});
+
+export const createDiscussionPostSuccess = on(DiscussionActions.createDiscussionPostSuccess, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
+  const newState: PlanningPokerStoreStateModel = cloneDeep(state);
+  if (newState.session.data) {
+    newState.session.data.discussion.posts.push(action.discussionPost);
+  }
+  return newState;
+});
+
+export const discussionPostCreated = on(DiscussionActions.discussionPostCreated, (state: PlanningPokerStoreStateModel, action: ActionType<any>) => {
+  const newState: PlanningPokerStoreStateModel = cloneDeep(state);
+  if (newState.session.data) {
+    newState.session.data.discussion.posts.push(action.discussionPost);
+  }
+  return newState;
+});

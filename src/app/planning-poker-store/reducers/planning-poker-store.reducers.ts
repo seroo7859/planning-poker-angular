@@ -60,7 +60,12 @@ import {
   startEstimationRoundSuccess
 } from "./estimation.reducers";
 import { selectCard, deselectCard } from "./deck.reducers";
-import { collapseDiscussion } from "./discussion.reducers";
+import {
+  collapseDiscussion, createDiscussionPostSuccess, discussionEnded, discussionPostCreated,
+  discussionStarted,
+  endDiscussionSuccess,
+  startDiscussionSuccess
+} from "./discussion.reducers";
 
 export const storeFeatureKey = 'planning-poker-store';
 
@@ -116,7 +121,13 @@ const planningPokerStoreReducers = createReducer(
   estimationSummaryReceived,
   giveEstimationSuccess,
   estimationGiven,
-  collapseDiscussion
+  collapseDiscussion,
+  startDiscussionSuccess,
+  discussionStarted,
+  endDiscussionSuccess,
+  discussionEnded,
+  createDiscussionPostSuccess,
+  discussionPostCreated
 );
 
 export const reducer = (state: PlanningPokerStoreStateModel | undefined, action: Action): any => planningPokerStoreReducers(state, action);
