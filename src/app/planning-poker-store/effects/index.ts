@@ -4,6 +4,7 @@ import * as TeamEffects from './team.effects';
 import * as BacklogEffects from './backlog.effects';
 import * as EstimationEffects from './estimation.effects';
 import * as DeckEffects from './deck.effects';
+import * as DiscussionEffects from './discussion.effects';
 
 export {
   SessionEffects,
@@ -11,5 +12,6 @@ export {
   TeamEffects,
   BacklogEffects,
   EstimationEffects,
-  DeckEffects
+  DeckEffects,
+  DiscussionEffects
 };
