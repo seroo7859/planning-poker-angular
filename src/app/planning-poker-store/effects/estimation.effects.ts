@@ -12,7 +12,12 @@ import { BacklogModel } from "../../core/models/backlog.model";
 @Injectable()
 export class EstimationEffects {
 
-  constructor(private actions$: Actions, private readonly store: Store, private estimationService: EstimationService, private toastService: ToastService) {}
+  constructor(
+    private actions$: Actions,
+    private readonly store: Store,
+    private estimationService: EstimationService,
+    private toastService: ToastService
+  ) {}
 
   startEstimationRound$ = createEffect(() =>
     this.actions$.pipe(
