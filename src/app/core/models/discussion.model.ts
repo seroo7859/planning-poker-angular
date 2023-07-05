@@ -1,5 +1,3 @@
-import {TeamMemberModel} from "./team.model";
-
 export interface DiscussionModel {
   topic: string;
   active: boolean;
