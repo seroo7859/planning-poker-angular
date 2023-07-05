@@ -9,9 +9,9 @@ export interface SessionModel {
   team: TeamModel;
   deck: DeckModel;
   backlog: BacklogModel;
+  discussion: DiscussionModel;
   estimationRound?: EstimationRoundModel;
   estimationSummary?: EstimationSummaryModel;
-  discussion?: DiscussionModel;
   createdAt: string;
 }
 
