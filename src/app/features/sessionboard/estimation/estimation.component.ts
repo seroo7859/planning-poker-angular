@@ -1,5 +1,10 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, Observable, Subscription, timer } from "rxjs";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  combineLatest,
+  Observable,
+  Subscription,
+  timer
+} from "rxjs";
 import { Store } from "@ngrx/store";
 import {
   BacklogSelectors,
@@ -36,6 +41,7 @@ import { BacklogItemModel, BacklogItemUpdateModel, BacklogModel } from "../../..
 import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
 import { DiscussionComponent } from "../discussion/discussion.component";
 import { BacklogComponent } from "../backlog/backlog.component";
+import { BaseChartDirective } from "ng2-charts";
 
 @Component({
   selector: 'app-estimation',
@@ -69,6 +75,9 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
   private summarySubscription: Subscription = new Subscription();
   summary?: EstimationSummaryModel;
 
+  @ViewChild(BaseChartDirective)
+  chart: BaseChartDirective | undefined;
+
   doughnutChartType: ChartType = 'doughnut';
   doughnutChartData?: ChartData;
   doughnutChartOptions: ChartOptions = {
@@ -80,7 +89,7 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     },
     animation: {
-      duration: 0
+      duration: 650
     },
     events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
     onClick: (event: ChartEvent, elements: ActiveElement[], chart: Chart) => this.onChartClicked(event, elements, chart),
@@ -132,7 +141,7 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
           footer: (tooltipItems: TooltipItem<any>[]) => {
             if (tooltipItems.length > 0) {
               const tooltipItem = tooltipItems[0];
-              const tooltipItemLabel = tooltipItem.label !== 'No Estimate' ? tooltipItem.label : `${this.userActiveEmoji}|${this.userInactiveEmoji}`;
+              const tooltipItemLabel = tooltipItem.label !== 'No Estimate' ? this.escapeRegExp(tooltipItem.label) : `${this.userActiveEmoji}|${this.userInactiveEmoji}`;
               const estimationRecordsFound = this.estimationRecords
                 .filter(estimationRecord => estimationRecord.card.value.match(tooltipItemLabel));
               if (estimationRecordsFound) {
@@ -195,7 +204,7 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
       combineLatest([ this.round$, this.team$ ])
         .subscribe(([round, team]) => {
           this.round = round;
-          this.estimationRecords = this.mapToEstimationRecords(team);
+          this.updateEstimationRecords(cloneDeep(this.mapToEstimationRecords(team)));
           this.setupEstimationRecords();
           this.setupTimer();
         })
@@ -205,7 +214,7 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
       combineLatest([ this.summary$, this.team$ ])
         .subscribe(([summary, team]) => {
           this.summary = summary;
-          this.doughnutChartData = this.mapToDoughnutChartData(summary, team);
+          this.updateDoughnutChartData(this.mapToDoughnutChartData(summary, team));
         })
     );
   }
@@ -219,6 +228,10 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.timerSubscription.unsubscribe();
     this.roundSubscription.unsubscribe();
     this.summarySubscription.unsubscribe();
+  }
+
+  private escapeRegExp(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   onCardSelected(selectedCard: DeckCardModel) {
@@ -258,7 +271,7 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
       .length;
   }
 
-  mapToDoughnutChartData(estimationSummary: EstimationSummaryModel, team: TeamModel): ChartData | undefined{
+  mapToDoughnutChartData(estimationSummary: EstimationSummaryModel, team: TeamModel): ChartData | undefined {
     if (!estimationSummary || !team) {
       return undefined;
     }
@@ -271,11 +284,12 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
       .map(estimationResult => estimationResult.estimators.length);
 
     const numberOfEstimatorsNotEstimate = team.members.length - this.getNumberOfEstimators();
+
     if (numberOfEstimatorsNotEstimate !== 0) {
       labels.push('');
       data.push(numberOfEstimatorsNotEstimate);
       estimationSummary.consensusReached = false;
-    } else {
+    } else if (labels.length === 1 && data.length === 1) {
       estimationSummary.consensusReached = true;
     }
 
@@ -286,6 +300,29 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
         data
       } ]
     };
+  }
+
+  private arrayEquals(a: any[], b: any[]): boolean {
+    return a.length === b.length &&
+      a.every((value, index) => value === b[index]);
+  }
+
+  updateDoughnutChartData(newDoughnutChartData: ChartData | undefined) {
+    if (!this.doughnutChartData || !newDoughnutChartData) {
+      this.doughnutChartData = newDoughnutChartData;
+      this.chart?.update();
+      return;
+    }
+
+    if (!this.arrayEquals(this.doughnutChartData.labels!, newDoughnutChartData.labels!)) {
+      this.doughnutChartData.labels = [ ...newDoughnutChartData.labels! ];
+      this.chart?.update();
+    }
+
+    if(!this.arrayEquals(this.doughnutChartData.datasets[0].data, newDoughnutChartData.datasets[0].data)) {
+      this.doughnutChartData.datasets[0].data = [ ...newDoughnutChartData.datasets[0].data ];
+      this.chart?.update();
+    }
   }
 
   mapToEstimationRecords(team: TeamModel): EstimationRecordModel[] {
@@ -305,6 +342,29 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
         estimator: member
       }
     });
+  }
+
+  updateEstimationRecords(newEstimationRecords: EstimationRecordModel[]) {
+    for (let i = 0; i < newEstimationRecords.length; i++) {
+      const newEstimationRecord = newEstimationRecords[i];
+      if (!this.estimationRecords[i]) {
+        this.estimationRecords[i] = newEstimationRecord;
+        continue;
+      }
+      if(this.estimationRecords[i].estimator.active !== newEstimationRecord.estimator.active) {
+        this.estimationRecords[i].estimator.active = newEstimationRecord.estimator.active;
+      }
+      if(this.estimationRecords[i].card.value !== newEstimationRecord.card.value) {
+        this.estimationRecords[i].card.value = newEstimationRecord.card.value;
+      }
+      if(this.estimationRecords[i].card.flipped !== newEstimationRecord.card.flipped) {
+        this.estimationRecords[i].card.flipped = newEstimationRecord.card.flipped;
+      }
+      if(this.estimationRecords[i].card.selected !== newEstimationRecord.card.selected) {
+        this.estimationRecords[i].card.selected = newEstimationRecord.card.selected;
+      }
+    }
+    this.estimationRecords.splice(newEstimationRecords.length);
   }
 
   setupEstimationRecords() {

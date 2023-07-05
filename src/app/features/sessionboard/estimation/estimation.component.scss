@@ -2,20 +2,6 @@
   font-size: smaller;
 }
 
-.user-active {
-  padding: 0;
-  background-clip: content-box;
-  border: 2px solid rgba(var(--bs-success-rgb), 0.75) !important;
-  outline-color: var(--bs-success);
-}
-
-.user-inactive {
-  padding: 0;
-  background-clip: content-box;
-  border: 2px solid rgba(var(--bs-danger-rgb), 0.75) !important;
-  outline-color: var(--bs-danger);
-}
-
 textarea.form-control-plaintext {
   resize: none;
   max-height: 5rem;

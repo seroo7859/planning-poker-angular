@@ -40,14 +40,14 @@
               [disabled]="isRoundStarted()"
               (click)="nextRound()">
         <span class="d-none d-xs-inline">Next </span>
-        <i class="bi bi-play text-stroke-thin"></i>
+        <i class="bi bi-play-fill"></i>
       </button>
       <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-sm rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;"
               [ngClass]="isRoundFinished() ? 'btn-secondary disabled' : 'btn-danger'"
               [disabled]="isRoundFinished()"
               (click)="finishRound()">
         <span class="d-none d-xs-inline">Finish </span>
-        <i class="bi bi-stop text-stroke-thin"></i>
+        <i class="bi bi-stop-fill"></i>
       </button>
     </div>
     <span [class.text-danger]="isRoundFinished()"><time>{{ time }}</time><i class="bi bi-clock text-stroke-thin ps-2"></i></span>
@@ -93,14 +93,14 @@
           <p [ngClass]="backlogItem.description ? 'mb-0' : 'mb-2'"><span class="fw-bold">{{ backlogItem.number }}</span> – {{ backlogItem.title }}</p>
           <textarea *ngIf="backlogItem.description" class="form-control-plaintext mb-2" rows="2" [innerText]="backlogItem.description" readonly></textarea>
         </div>
-        <div class="btn-group gap-3">
+        <div *ngIf="summary" class="btn-group gap-3">
           <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-secondary btn-sm rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;" (click)="repeatRound()">
             <span class="d-none d-sm-inline pe-1" style="padding-right: .2rem;">Repeat </span>
             <i class="bi bi-repeat small text-stroke-thin"></i>
           </button>
           <button *ngIf="user.role === 'MODERATOR'" type="button" class="btn btn-success btn-sm rounded-pill py-0" style="--bs-btn-padding-x: 0.65rem;" (click)="nextRound()">
             <span class="d-none d-sm-inline">Next </span>
-            <i class="bi bi-play text-stroke-thin"></i>
+            <i class="bi bi-play-fill"></i>
           </button>
         </div>
       </div>
