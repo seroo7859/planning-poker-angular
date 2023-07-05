@@ -8,7 +8,13 @@ import {
   UserSelectors
 } from "../../planning-poker-store/selectors";
 import { RxStompService } from "../../core/services/rx-stomp.service";
-import { BacklogActions, EstimationActions, TeamActions, UserActions } from "../../planning-poker-store/actions";
+import {
+  BacklogActions,
+  DiscussionActions,
+  EstimationActions,
+  TeamActions,
+  UserActions
+} from "../../planning-poker-store/actions";
 import { UserRoleModel } from "../../core/models/user.model";
 
 @Component({
@@ -133,6 +139,18 @@ export class SessionboardComponent implements OnInit, OnDestroy {
 
               this.sessionSubscription.add(
                 this.rxStompService
+                  .watch(`/session/${sessionId}/discussion/started`)
+                  .subscribe((message) => this.store.dispatch(DiscussionActions.discussionStarted({ discussion: JSON.parse(message.body) })))
+              );
+
+              this.sessionSubscription.add(
+                this.rxStompService
+                  .watch(`/session/${sessionId}/discussion/ended`)
+                  .subscribe((message) => this.store.dispatch(DiscussionActions.discussionEnded({ discussion: JSON.parse(message.body) })))
+              );
+
+              this.sessionSubscription.add(
+                this.rxStompService
                   .watch(`/session/${sessionId}/estimation/round/started`)
                   .subscribe((message) => this.store.dispatch(EstimationActions.estimationRoundStarted({ estimationRound: JSON.parse(message.body) })))
               );
@@ -152,8 +170,26 @@ export class SessionboardComponent implements OnInit, OnDestroy {
 
             this.sessionSubscription.add(
               this.rxStompService
+                .watch(`/session/${sessionId}/discussion/post-created`)
+                .subscribe((message) => {
+                  const discussionPost = JSON.parse(message.body);
+                  if (discussionPost.author === user.name) {
+                    return;
+                  }
+                  this.store.dispatch(DiscussionActions.discussionPostCreated({ discussionPost }))
+                })
+            );
+
+            this.sessionSubscription.add(
+              this.rxStompService
                 .watch(`/session/${sessionId}/estimation/given`)
-                .subscribe((message) => this.store.dispatch(EstimationActions.estimationGiven({ estimation: JSON.parse(message.body) })))
+                .subscribe((message) => {
+                  const estimation = JSON.parse(message.body);
+                  if (estimation.estimator === user.name) {
+                    return;
+                  }
+                  this.store.dispatch(EstimationActions.estimationGiven({ estimation }))
+                })
             );
 
             this.sessionSubscription.add(
