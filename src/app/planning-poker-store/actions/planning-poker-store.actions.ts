@@ -36,9 +36,6 @@ export enum ActionTypes {
   TeamMemberConnected    = '[Team] Team Member Connected',
   TeamMemberDisconnected = '[Team] Team Member Disconnected',
 
-  CollapseDiscussion = '[Discussion] Collapse Discussion',
-  CollapseBacklog    = '[Backlog] Collapse Backlog',
-
   ImportBacklog        = '[Backlog] Import Backlog',
   ImportBacklogSuccess = '[Backlog] Import Backlog Success',
   ImportBacklogFailure = '[Backlog] Import Backlog Failure',
@@ -77,6 +74,24 @@ export enum ActionTypes {
   MoveBacklogItemSuccess = '[Backlog] Move Backlog Item Success',
   MoveBacklogItemFailure = '[Backlog] Move Backlog Item Failure',
   BacklogItemMoved       = '[Backlog] Backlog Item Moved',
+
+  CollapseBacklog    = '[Backlog] Collapse Backlog',
+  CollapseDiscussion = '[Discussion] Collapse Discussion',
+
+  StartDiscussion        = '[Discussion] Start Discussion',
+  StartDiscussionSuccess = '[Discussion] Start Discussion Success',
+  StartDiscussionFailure = '[Discussion] Start Discussion Failure',
+  DiscussionStarted      = '[Discussion] Discussion Started',
+
+  EndDiscussion        = '[Discussion] End Discussion',
+  EndDiscussionSuccess = '[Discussion] End Discussion Success',
+  EndDiscussionFailure = '[Discussion] End Discussion Failure',
+  DiscussionEnded      = '[Discussion] Discussion Ended',
+
+  CreateDiscussionPost        = '[Discussion] Create Discussion Post',
+  CreateDiscussionPostSuccess = '[Discussion] Create Discussion Post Success',
+  CreateDiscussionPostFailure = '[Discussion] Create Discussion Post Failure',
+  DiscussionPostCreated       = '[Discussion] Discussion Post Created',
 
   StartEstimationRound        = '[Estimation] Start Estimation Round',
   StartEstimationRoundSuccess = '[Estimation] Start Estimation Round Success',
