@@ -12,7 +12,12 @@ import { ToastService } from "../../core/services/toast.service";
 @Injectable()
 export class BacklogEffects {
 
-  constructor(private actions$: Actions, private readonly store: Store, private backlogService: BacklogService, private toastService: ToastService) {}
+  constructor(
+    private actions$: Actions,
+    private readonly store: Store,
+    private backlogService: BacklogService,
+    private toastService: ToastService
+  ) {}
 
   importBacklog$ = createEffect(() =>
     this.actions$.pipe(
