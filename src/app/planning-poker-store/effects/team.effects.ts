@@ -11,7 +11,12 @@ import { TeamService } from "../../core/services/team.service";
 @Injectable()
 export class TeamEffects {
 
-  constructor(private actions$: Actions, private readonly store: Store, private teamService: TeamService, private toastService: ToastService) {}
+  constructor(
+    private actions$: Actions,
+    private readonly store: Store,
+    private teamService: TeamService,
+    private toastService: ToastService
+  ) {}
 
   renameTeam$ = createEffect(() =>
     this.actions$.pipe(
