@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Observable, Subscription, take } from "rxjs";
 import { Store } from "@ngrx/store";
 import {
@@ -43,7 +50,7 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedBacklogItem?: BacklogItemModel;
   round?: EstimationRoundModel;
 
-  constructor(private readonly store: Store, private modalService: NgbModal, public activeOffcanvas: NgbActiveOffcanvas) {}
+  constructor(private el: ElementRef, private readonly store: Store, private modalService: NgbModal, public activeOffcanvas: NgbActiveOffcanvas) {}
 
   ngOnInit() {
     this.backlog$ = this.store.select(BacklogSelectors.selectBacklog);
@@ -52,7 +59,12 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
     this.user$ = this.store.select(UserSelectors.selectUser);
 
     this.subscription.add(
-      this.round$.subscribe(round => this.round = round)
+      this.round$.subscribe(round => {
+        this.round = round;
+        if (this.isRoundStarted()) {
+          setTimeout(() => this.scrollToActiveBacklogItem(), 100);
+        }
+      })
     );
   }
 
@@ -76,6 +88,10 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
     const el = document.getElementById('backlog-items') as HTMLElement;
     const sortable = Sortable.create(el, {
       animation: 150,
+      filter: '.active',
+      onMove: (event) => {
+        return !event.related.classList.contains('active');
+      },
       onUpdate: (event) => {
         const backlogItemNumber = event.item.getAttribute('data-backlog-item-number');
         console.log(`Move backlog item ${backlogItemNumber} from old index ${event.oldIndex} to new index ${event.newIndex}`);
@@ -84,6 +100,13 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
         this.store.dispatch(BacklogActions.moveBacklogItem({ backlogItemNumber: backlogItemNumber!, newIndex: event.newIndex! }));
       }
     });
+  }
+
+  scrollToActiveBacklogItem() {
+    const activeBacklogItemElement = this.el.nativeElement.querySelector('.list-group .list-group-item.active');
+    if (activeBacklogItemElement) {
+      activeBacklogItemElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+    }
   }
 
   getNumberOfEstimatedBacklogItems(backlog: BacklogModel): number {
