@@ -115,6 +115,10 @@ h6 {
 /* Utilities
  ------------------------------------------------------------ */
 
+.z-1 {
+  z-index: 1;
+}
+
 .overflow-x-auto {
   overflow-x: auto!important;
 }
@@ -151,6 +155,14 @@ h6 {
 
 .text-pre {
   white-space: pre;
+}
+
+.text-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.text-pre-line {
+  white-space: pre-line;
 }
 
 .text-noselect {
@@ -443,4 +455,22 @@ input[type="color"]::-moz-color-swatch,
 
 [contenteditable="true"]:hover{
   cursor: text;
+}
+
+
+/* User Status
+ ------------------------------------------------------------ */
+
+.user-active {
+  padding: 0;
+  background-clip: content-box;
+  border: 2px solid rgba(var(--bs-success-rgb), 0.75) !important;
+  outline-color: var(--bs-success);
+}
+
+.user-inactive {
+  padding: 0;
+  background-clip: content-box;
+  border: 2px solid rgba(var(--bs-danger-rgb), 0.75) !important;
+  outline-color: var(--bs-danger);
 }
