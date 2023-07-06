@@ -16,6 +16,7 @@ import { map } from "rxjs/operators";
 import { DiscussionModel, DiscussionPostCreateModel, DiscussionPostModel } from "../../../core/models/discussion.model";
 import { TeamMemberModel, TeamModel } from "../../../core/models/team.model";
 import cloneDeep from "lodash.clonedeep";
+import { Options } from "@popperjs/core";
 
 @Component({
   selector: 'app-discussion',
@@ -39,8 +40,69 @@ export class DiscussionComponent implements OnInit, AfterViewInit, AfterViewChec
   private textAreaMinRows: number = 1;
   private textAreaMaxRows: number = 3;
   private textAreaBaseScrollHeight: number = 0;
+  private textAreaCursorPosition: number = 0;
 
   private scrolledToEnd: boolean = false;
+
+  readonly emojiMap: Map<string, string> = new Map([
+    ["😀", "Grinning Face"],
+    ["🙂", "Slightly Smiling Face"],
+    ["😐", "Expressionless Face"],
+    ["🙁", "Slightly Frowning Face"],
+    ["😢", "Crying Face"],
+    ["🤣", "Rolling on the Floor Laughing"],
+    ["😂", "Face with Tears of Joy"],
+    ["😊", "Smiling Face with Smiling Eyes"],
+    ["🥺", "Pleading Face"],
+    ["😭", "Loudly Crying Face"],
+    ["😍", "Smiling Face with Heart-Eyes"],
+    ["🥰", "Smiling Face with Hearts"],
+    ["🥳", "Partying Face"],
+    ["😅", "Grinning Face with Sweat"],
+    ["😴", "Sleeping Face"],
+    ["😁", "Beaming Face with Smiling Eyes"],
+    ["🤔", "Thinking Face"],
+    ["👍", "Thumbs Up"],
+    ["👎", "Thumbs Down"],
+    ["🙏", "Folded Hands"],
+    ["️❤️️", "Red Heart"],
+    ["️🔥", "Fire"],
+    ["️✨", "Sparkles"],
+    ["️🎉", "Party Popper"],
+    ["️🔁", "Repeat Button"]
+  ]);
+
+  popperOptions = (options: Partial<Options>) => {
+    // customize placement
+    options.placement = 'top-end';
+
+    // customize modifiers
+    for (const modifier of options.modifiers || []) {
+      // disable flip
+      if (modifier.name === 'flip') {
+        modifier.enabled = false;
+      }
+
+      // customize offset
+      if (modifier.name === 'offset' && modifier.options) {
+        modifier.options['offset'] = () => [20, 20];
+      }
+    }
+
+    // add your own modifier
+    options.modifiers?.push({
+      name: 'custom',
+      enabled: true,
+      phase: 'main',
+      fn: ({ state }) => {},
+    });
+
+    // first update callback
+    options.onFirstUpdate = (state) => {
+      console.log('onFirstUpdate', state);
+    };
+    return options;
+  };
 
   constructor(private el: ElementRef, private readonly store: Store, public activeOffcanvas: NgbActiveOffcanvas) {}
 
@@ -125,6 +187,7 @@ export class DiscussionComponent implements OnInit, AfterViewInit, AfterViewChec
     if (this.isTextAreaBlank()) {
       this.resetTextArea();
     }
+    this.textAreaCursorPosition = this.textarea!.nativeElement.selectionStart;
   }
 
   onTextAreaInput(event: Event) {
@@ -171,5 +234,17 @@ export class DiscussionComponent implements OnInit, AfterViewInit, AfterViewChec
       // Reset textarea
       this.resetTextArea();
     }
+  }
+
+  onEmojiSelected(emoji: string) {
+    const text = this.textAreaValue;
+    const textBefore = text.slice(0, this.textAreaCursorPosition);
+    const textAfter = text.slice(this.textAreaCursorPosition)
+    this.textAreaValue = textBefore + emoji + textAfter;
+    this.textAreaCursorPosition += emoji.length;
+  }
+
+  keepOrder(a: any, b: any) {
+    return a;
   }
 }

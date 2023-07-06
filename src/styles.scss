@@ -474,3 +474,14 @@ input[type="color"]::-moz-color-swatch,
   border: 2px solid rgba(var(--bs-danger-rgb), 0.75) !important;
   outline-color: var(--bs-danger);
 }
+
+
+/* Emoji Picker
+ ------------------------------------------------------------ */
+
+.popover.emoji-picker {
+  --bs-popover-max-width: 13rem;
+  --bs-popover-body-padding-x: .5rem;
+  --bs-popover-body-padding-y: .5rem;
+  --bs-popover-border-color: var(--bs-secondary-border-subtle);
+}

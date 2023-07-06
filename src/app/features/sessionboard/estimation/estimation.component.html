@@ -18,8 +18,8 @@
         <ul ngbDropdownMenu class="shadow border-secondary-subtle py-0">
           <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-none d-lg-inline-block border-bottom border-secondary-subtle rounded-0 rounded-top py-2" (click)="collapseBacklog()"><i class="bi bi-layers text-stroke-thin pe-2"></i> Backlog</button></li>
           <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-lg-none border-bottom border-secondary-subtle rounded-0 rounded-top py-2" (click)="openBacklogOffcanvas()"><i class="bi bi-layers text-stroke-thin pe-2"></i> Backlog</button></li>
-          <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-none d-lg-inline-block border-bottom border-secondary-subtle py-2" (click)="collapseDiscussion()"><i class="bi bi-chat-text text-stroke-thin pe-2"></i> Discuss</button></li>
-          <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-lg-none border-bottom border-secondary-subtle py-2" (click)="openDiscussionOffcanvas()"><i class="bi bi-chat-text text-stroke-thin pe-2"></i> Discuss</button></li>
+          <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-none d-lg-inline-block border-bottom border-secondary-subtle rounded-0 py-2" (click)="collapseDiscussion()"><i class="bi bi-chat-text text-stroke-thin pe-2"></i> Discuss</button></li>
+          <li><button ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item d-lg-none border-bottom border-secondary-subtle rounded-0 py-2" (click)="openDiscussionOffcanvas()"><i class="bi bi-chat-text text-stroke-thin pe-2"></i> Discuss</button></li>
           <li><button *ngIf="(session$ | async) as session" ngbDropdownItem type="button" class="btn btn-sm btn-outline-dark dropdown-item rounded-0 rounded-bottom py-2" (click)="leaveSession(session.data)"><i class="bi bi-box-arrow-right text-stroke-thin pe-2"></i> Leave</button></li>
         </ul>
       </div>

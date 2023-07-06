@@ -58,11 +58,21 @@
                     [disableTooltip]="!discussion.active" placement="top" container="body" ngbTooltip="Write a post and press STRG+ENTER"></textarea>
           <label for="post" class="col-form-label visually-hidden">Your post:</label>
           <button id="btn-emoji-picker" type="button" class="btn btn-lg btn-light bg-white text-secondary rounded-circle shadow-sm border-0 p-2 me-3 z-1 position-absolute top-50 end-0 translate-middle-y"
+                  [ngbPopover]="popContent" [popperOptions]="popperOptions" [popoverClass]="'emoji-picker shadow border-secondary-subtle'" [autoClose]="'outside'" container="body"
                   [class.disabled]="!discussion.active"
                   [disabled]="!discussion.active">
             <i class="bi bi-emoji-smile position-absolute top-50 start-50 translate-middle lh-1 p-2"
                [disableTooltip]="!discussion.active" placement="top" container="body" ngbTooltip="Emoji"></i>
           </button>
+          <ng-template #popContent>
+            <div class="text-center">
+              <div class="row row-cols-5 gx-0 gy-1">
+                <div *ngFor="let emoji of emojiMap | keyvalue: keepOrder;" class="col">
+                  <button class="btn btn-light bg-transparent border-0 p-0" type="button" placement="top" container="body" ngbTooltip="{{ emoji.value }}" (click)="onEmojiSelected(emoji.key)">{{ emoji.key }}</button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
         </div>
         <button class="btn btn-lg text-white rounded-circle shadow-sm border-0 position-relative" style="padding: 1.2rem;" type="button"
                 [ngClass]="discussion.active ? 'btn-warning' : 'btn-secondary'"

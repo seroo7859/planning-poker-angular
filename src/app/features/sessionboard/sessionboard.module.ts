@@ -8,6 +8,7 @@ import {
   NgbCollapseModule,
   NgbDropdownModule,
   NgbOffcanvasModule,
+  NgbPopoverModule,
   NgbToastModule,
   NgbTooltipModule
 } from "@ng-bootstrap/ng-bootstrap";
@@ -35,6 +36,7 @@ import { NgChartsModule } from "ng2-charts";
     NgbToastModule,
     NgbCollapseModule,
     NgbOffcanvasModule,
+    NgbPopoverModule,
     NgxJdenticonModule,
     NgChartsModule,
     CoreModule,
