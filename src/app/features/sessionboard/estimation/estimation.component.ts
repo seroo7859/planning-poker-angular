@@ -1,11 +1,6 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {
-  combineLatest,
-  Observable,
-  Subscription,
-  timer
-} from "rxjs";
-import { Store } from "@ngrx/store";
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {combineLatest, Observable, Subscription, timer} from "rxjs";
+import {Store} from "@ngrx/store";
 import {
   BacklogSelectors,
   DeckSelectors,
@@ -14,9 +9,9 @@ import {
   TeamSelectors,
   UserSelectors
 } from "../../../planning-poker-store/selectors";
-import { map } from "rxjs/operators";
+import {map} from "rxjs/operators";
 import cloneDeep from "lodash.clonedeep";
-import { DeckCardModel } from "../../../core/models/deck.model";
+import {DeckCardModel} from "../../../core/models/deck.model";
 import {
   EstimationModel,
   EstimationRecordModel,
@@ -30,18 +25,18 @@ import {
   SessionActions,
   TeamActions
 } from "../../../planning-poker-store/actions";
-import { deckCardInitial } from "../../../core/models/deck.initial";
-import { TeamMemberModel, TeamModel } from "../../../core/models/team.model";
-import { ActiveElement, Chart, ChartData, ChartEvent, ChartOptions, ChartType, TooltipItem } from "chart.js";
-import { color } from "chart.js/helpers";
+import {deckCardInitial} from "../../../core/models/deck.initial";
+import {TeamMemberModel, TeamMemberRoleModel, TeamModel} from "../../../core/models/team.model";
+import {ActiveElement, Chart, ChartData, ChartEvent, ChartOptions, ChartType, TooltipItem} from "chart.js";
+import {color} from "chart.js/helpers";
 import DatalabelsPlugin from "chartjs-plugin-datalabels";
 import autocolors from 'chartjs-plugin-autocolors';
-import { SessionModel } from "../../../core/models/session.model";
-import { BacklogItemModel, BacklogItemUpdateModel, BacklogModel } from "../../../core/models/backlog.model";
-import { NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
-import { DiscussionComponent } from "../discussion/discussion.component";
-import { BacklogComponent } from "../backlog/backlog.component";
-import { BaseChartDirective } from "ng2-charts";
+import {SessionModel} from "../../../core/models/session.model";
+import {BacklogItemModel, BacklogItemUpdateModel, BacklogModel} from "../../../core/models/backlog.model";
+import {NgbOffcanvas} from "@ng-bootstrap/ng-bootstrap";
+import {DiscussionComponent} from "../discussion/discussion.component";
+import {BacklogComponent} from "../backlog/backlog.component";
+import {BaseChartDirective} from "ng2-charts";
 
 @Component({
   selector: 'app-estimation',
@@ -283,7 +278,10 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
       .filter(estimationResult => this.findEstimationRecordsByCardValue(estimationResult.estimationValue).length > 0)
       .map(estimationResult => estimationResult.estimators.length);
 
-    const numberOfEstimatorsNotEstimate = team.members.length - this.getNumberOfEstimators();
+    const numberOfTeamMembers = team.members
+      .filter(member => member.role !== TeamMemberRoleModel.SPECTATOR)
+      .length;
+    const numberOfEstimatorsNotEstimate = numberOfTeamMembers - this.getNumberOfEstimators();
 
     if (numberOfEstimatorsNotEstimate !== 0) {
       labels.push('');
@@ -329,19 +327,21 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!team) {
       return [];
     }
-    return team.members.map((member: TeamMemberModel): EstimationRecordModel => {
-      const estimationFound: EstimationModel | undefined = this.round?.estimations.find(estimation => estimation.estimator === member.name && member.role !== 'SPECTATOR');
-      const estimationValue = estimationFound ? estimationFound.estimationValue : (member.active ? this.userActiveEmoji : this.userInactiveEmoji);
-      const cardFlipped = (estimationValue === this.userActiveEmoji || estimationValue !== this.userInactiveEmoji) && this.isRoundStarted();
-      return {
-        card: {
-          ...deckCardInitial,
-          value: estimationValue,
-          flipped: cardFlipped
-        },
-        estimator: member
-      }
-    });
+    return team.members
+      .filter((member: TeamMemberModel) => member.role !== TeamMemberRoleModel.SPECTATOR)
+      .map((member: TeamMemberModel): EstimationRecordModel => {
+        const estimationFound: EstimationModel | undefined = this.round?.estimations.find(estimation => estimation.estimator === member.name);
+        const estimationValue = estimationFound ? estimationFound.estimationValue : (member.active ? this.userActiveEmoji : this.userInactiveEmoji);
+        const cardFlipped = (estimationValue === this.userActiveEmoji || estimationValue !== this.userInactiveEmoji) && this.isRoundStarted();
+        return {
+          card: {
+            ...deckCardInitial,
+            value: estimationValue,
+            flipped: cardFlipped
+          },
+          estimator: member
+        }
+      });
   }
 
   updateEstimationRecords(newEstimationRecords: EstimationRecordModel[]) {

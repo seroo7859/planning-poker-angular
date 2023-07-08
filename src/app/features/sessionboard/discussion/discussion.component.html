@@ -53,16 +53,16 @@
                     [rows]="textAreaRows" minlength="1" maxlength="512" autocomplete="off"
                     (focus)="onTextAreaFocus($event)" (blur)="onTextAreaBlur($event)" (input)="onTextAreaInput($event)"
                     (keydown.control.enter)="createPost()"
-                    [class.disabled]="!discussion.active"
-                    [disabled]="!discussion.active"
-                    [disableTooltip]="!discussion.active" placement="top" container="body" ngbTooltip="Write a post and press STRG+ENTER"></textarea>
+                    [class.disabled]="!discussion.active || user.role === 'SPECTATOR'"
+                    [disabled]="!discussion.active || user.role === 'SPECTATOR'"
+                    [disableTooltip]="!discussion.active || user.role === 'SPECTATOR'" placement="top" container="body" ngbTooltip="Write a post and press STRG+ENTER"></textarea>
           <label for="post" class="col-form-label visually-hidden">Your post:</label>
           <button id="btn-emoji-picker" type="button" class="btn btn-lg btn-light bg-white text-secondary rounded-circle shadow-sm border-0 p-2 me-3 z-1 position-absolute top-50 end-0 translate-middle-y"
                   [ngbPopover]="popContent" [popperOptions]="popperOptions" [popoverClass]="'emoji-picker shadow border-secondary-subtle'" [autoClose]="'outside'" container="body"
-                  [class.disabled]="!discussion.active"
-                  [disabled]="!discussion.active">
+                  [class.disabled]="!discussion.active || user.role === 'SPECTATOR'"
+                  [disabled]="!discussion.active || user.role === 'SPECTATOR'">
             <i class="bi bi-emoji-smile position-absolute top-50 start-50 translate-middle lh-1 p-2"
-               [disableTooltip]="!discussion.active" placement="top" container="body" ngbTooltip="Emoji"></i>
+               [disableTooltip]="!discussion.active || user.role === 'SPECTATOR'" placement="top" container="body" ngbTooltip="Emoji"></i>
           </button>
           <ng-template #popContent>
             <div class="text-center">
@@ -75,12 +75,12 @@
           </ng-template>
         </div>
         <button class="btn btn-lg text-white rounded-circle shadow-sm border-0 position-relative" style="padding: 1.2rem;" type="button"
-                [ngClass]="discussion.active ? 'btn-warning' : 'btn-secondary'"
-                [class.disabled]="!discussion.active"
-                [disabled]="!discussion.active"
+                [ngClass]="discussion.active && user.role !== 'SPECTATOR' ? 'btn-warning' : 'btn-secondary'"
+                [class.disabled]="!discussion.active || user.role === 'SPECTATOR'"
+                [disabled]="!discussion.active || user.role === 'SPECTATOR'"
                 (click)="createPost()">
           <i class="bi bi-send-fill rounded-circle position-absolute translate-middle lh-0 p-2"
-             [disableTooltip]="!discussion.active" placement="top" container="body" ngbTooltip="Send"></i>
+             [disableTooltip]="!discussion.active || user.role === 'SPECTATOR'" placement="top" container="body" ngbTooltip="Send"></i>
         </button>
       </div>
     </div>
