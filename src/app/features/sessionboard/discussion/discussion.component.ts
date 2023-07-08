@@ -104,6 +104,10 @@ export class DiscussionComponent implements OnInit, AfterViewInit, AfterViewChec
     return options;
   };
 
+  private touchStartX: number = 0;
+  private touchEndX: number = 0;
+  private readonly swipeThreshold: number = 80;
+
   constructor(private el: ElementRef, private readonly store: Store, public activeOffcanvas: NgbActiveOffcanvas) {}
 
   ngOnInit() {
@@ -144,6 +148,28 @@ export class DiscussionComponent implements OnInit, AfterViewInit, AfterViewChec
       }
       return post;
     }).filter(post => post.author);
+  }
+
+  handleTouchStart(event: TouchEvent) {
+    this.touchStartX = event.changedTouches[0].clientX;
+  }
+
+  handleTouchEnd(event: TouchEvent) {
+    this.touchEndX = event.changedTouches[0].clientX;
+    this.checkSwipeDirection();
+  }
+
+  private checkSwipeDirection() {
+    const diffX: number = this.touchEndX - this.touchStartX;
+    if (Math.abs(diffX) < this.swipeThreshold) {
+      return;
+    }
+    if (diffX > 0) {
+      console.log("Swiped right");
+      this.activeOffcanvas.dismiss("Swiped right");
+    } else if (diffX < 0) {
+      console.log("Swiped left");
+    }
   }
 
   handleMouseEnter(event: Event) {

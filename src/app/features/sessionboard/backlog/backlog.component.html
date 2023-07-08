@@ -1,5 +1,6 @@
 <ng-container *ngIf="(backlog$ | async) as backlog">
-  <div *ngIf="(user$ | async) as user" class="offcanvas-body d-flex flex-column px-1 py-lg-3 bg-body-secondary vh-100">
+  <div *ngIf="(user$ | async) as user" class="offcanvas-body d-flex flex-column px-1 py-lg-3 bg-body-secondary vh-100"
+       (touchstart)="handleTouchStart($event)" (touchend)="handleTouchEnd($event)">
     <div class="d-flex flex-nowrap justify-content-between align-items-center gap-2 px-3 mx-2">
       <h3 class="offcanvas-title me-auto lh-1 mb-0" id="offcanvasBacklogLabel">Backlog</h3>
       <div *ngIf="user.role === 'MODERATOR'" class="dropdown-center">
@@ -61,7 +62,7 @@
         </div>
       </li>
     </ol>
-    <p class="text-center small pt-2 px-3 mx-2 mt-auto mb-1">{{ getNumberOfEstimatedBacklogItems(backlog) }} of {{ backlog.items.length }} estimated</p>
+    <p class="text-center small pt-2 px-3 mx-2 mt-auto mb-5 mb-lg-1">{{ getNumberOfEstimatedBacklogItems(backlog) }} of {{ backlog.items.length }} estimated</p>
   </div>
 </ng-container>
 

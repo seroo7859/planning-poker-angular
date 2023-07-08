@@ -107,7 +107,7 @@
     </div>
   </div>
 
-  <div *ngIf="isRoundStarted()" class="px-4 py-2 mt-auto">
+  <div *ngIf="isRoundStarted()" class="px-4 py-2 mt-auto mb-5 mb-lg-0">
     <app-deck *ngIf="user.role !== 'SPECTATOR'" [wrap]="false" [size]="'md'" [deck]="deck$ | async" (cardSelected)="onCardSelected($event)"></app-deck>
   </div>
 </div>

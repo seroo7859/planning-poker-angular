@@ -50,6 +50,10 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedBacklogItem?: BacklogItemModel;
   round?: EstimationRoundModel;
 
+  private touchStartX: number = 0;
+  private touchEndX: number = 0;
+  private readonly swipeThreshold: number = 80;
+
   constructor(private el: ElementRef, private readonly store: Store, private modalService: NgbModal, public activeOffcanvas: NgbActiveOffcanvas) {}
 
   ngOnInit() {
@@ -153,6 +157,28 @@ export class BacklogComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     this.editBacklogItem(backlogItem);
+  }
+
+  handleTouchStart(event: TouchEvent) {
+    this.touchStartX = event.changedTouches[0].clientX;
+  }
+
+  handleTouchEnd(event: TouchEvent) {
+    this.touchEndX = event.changedTouches[0].clientX;
+    this.checkSwipeDirection();
+  }
+
+  private checkSwipeDirection() {
+    const diffX: number = this.touchEndX - this.touchStartX;
+    if (Math.abs(diffX) < this.swipeThreshold) {
+      return;
+    }
+    if (diffX > 0) {
+      console.log("Swiped right");
+    } else if (diffX < 0) {
+      console.log("Swiped left");
+      this.activeOffcanvas.dismiss("Swiped left");
+    }
   }
 
   renameBacklog(name: string) {
