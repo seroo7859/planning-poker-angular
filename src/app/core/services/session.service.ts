@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { delay, Observable, tap } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { SessionCreateModel, SessionJoinModel, SessionModel } from "../models/session.model";
 import { AuthService } from "./auth.service";
 import { map } from "rxjs/operators";
@@ -27,7 +27,6 @@ export class SessionService {
   createSession(session: SessionCreateModel): Observable<SessionModel> {
     return this.http.post<SessionModel>(this.url, session, { observe: 'response', ...this.httpOptions })
       .pipe(
-        delay(500),
         tap(response => this.authService.handleResponse(response)),
         map(response => response.body as SessionModel)
       );
@@ -41,7 +40,6 @@ export class SessionService {
     const { sessionId, ...data } = session;
     return this.http.post<SessionModel>(`${this.url}/${session.sessionId}/join`, data, { observe: 'response', ...this.httpOptions })
       .pipe(
-        delay(500),
         tap(response => this.authService.handleResponse(response)),
         map(response => response.body as SessionModel)
       );
