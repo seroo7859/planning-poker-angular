@@ -38,6 +38,13 @@ export class DiscussionEffects {
     );
   }, { dispatch: false });
 
+  discussionStarted$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(DiscussionActions.discussionStarted),
+      map(({ discussion }) => this.toastService.showInfo({ text: `Discussion about '${discussion.topic.toLowerCase()}' started` }))
+    );
+  }, { dispatch: false });
+
   endDiscussion$ = createEffect(() =>
     this.actions$.pipe(
       ofType(DiscussionActions.endDiscussion),
@@ -55,6 +62,13 @@ export class DiscussionEffects {
     return this.actions$.pipe(
       ofType(DiscussionActions.endDiscussionFailure),
       map(({ error }) => this.toastService.showError({ text: 'End discussion failed' }))
+    );
+  }, { dispatch: false });
+
+  discussionEnded$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(DiscussionActions.discussionEnded),
+      map(({ discussion }) => this.toastService.showInfo({ text: `Discussion about '${discussion.topic.toLowerCase()}' ended` }))
     );
   }, { dispatch: false });
 
