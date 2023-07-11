@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   name: 'prod',
-  apiUrl: '',
-  brokerUrl: ''
+  apiUrl: `${window.location.origin}/api`,
+  brokerUrl: `${window.location.origin.replace(/^https?/, 'ws')}/ws`
 };

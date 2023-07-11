@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
   name: 'dev',
-  apiUrl: 'http://localhost:8080/api',
-  brokerUrl: 'ws://localhost:8080/ws'
+  apiUrl: `${window.location.origin}/api`,
+  brokerUrl: `${window.location.origin.replace(/^https?/, 'ws')}/ws`
 };
