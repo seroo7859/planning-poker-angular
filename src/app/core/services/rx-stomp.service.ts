@@ -63,7 +63,7 @@ const myRxStompConfig: RxStompConfig = {
   connectionTimeout: 0,               // wait forever
   reconnectDelay: 200,                // wait 200 milliseconds before attempting auto reconnect
 
-  debug: !environment.production ? log : undefined,    // log diagnostics
+  debug: !environment.production ? log : noDebug,    // log diagnostics
 
   beforeConnect: (client) => {
     const authService = inject(AuthService);
@@ -77,3 +77,5 @@ const myRxStompConfig: RxStompConfig = {
 function log(msg: string): void {
   console.log(new Date(), msg);
 }
+
+function noDebug(msg: string): void {}
