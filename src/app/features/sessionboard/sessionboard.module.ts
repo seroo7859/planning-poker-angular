@@ -20,6 +20,7 @@ import { JDENTICON_CONFIG, NgxJdenticonModule } from "ngx-jdenticon";
 import { FormsModule } from "@angular/forms";
 import { SharedModule } from "../../shared/shared.module";
 import { NgChartsModule } from "ng2-charts";
+import { QRCodeModule } from "angularx-qrcode";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { NgChartsModule } from "ng2-charts";
     CoreModule,
     FormsModule,
     SharedModule,
-    NgChartsModule
+    NgChartsModule,
+    QRCodeModule
   ],
   providers: [
     {

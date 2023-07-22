@@ -40,7 +40,8 @@
             ],
             "allowedCommonJsDependencies": [
               "lodash.clonedeep",
-              "file-saver"
+              "file-saver",
+              "qrcode"
             ]
           },
           "configurations": {
