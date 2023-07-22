@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {combineLatest, Observable, Subscription, timer} from "rxjs";
-import {Store} from "@ngrx/store";
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { combineLatest, Observable, Subscription, timer } from "rxjs";
+import { Store } from "@ngrx/store";
 import {
   BacklogSelectors,
   DeckSelectors,
@@ -9,9 +9,9 @@ import {
   TeamSelectors,
   UserSelectors
 } from "../../../planning-poker-store/selectors";
-import {map} from "rxjs/operators";
+import { map } from "rxjs/operators";
 import cloneDeep from "lodash.clonedeep";
-import {DeckCardModel} from "../../../core/models/deck.model";
+import { DeckCardModel } from "../../../core/models/deck.model";
 import {
   EstimationModel,
   EstimationRecordModel,
@@ -25,18 +25,18 @@ import {
   SessionActions,
   TeamActions
 } from "../../../planning-poker-store/actions";
-import {deckCardInitial} from "../../../core/models/deck.initial";
-import {TeamMemberModel, TeamMemberRoleModel, TeamModel} from "../../../core/models/team.model";
-import {ActiveElement, Chart, ChartData, ChartEvent, ChartOptions, ChartType, TooltipItem} from "chart.js";
-import {color} from "chart.js/helpers";
+import { deckCardInitial } from "../../../core/models/deck.initial";
+import { TeamMemberModel, TeamMemberRoleModel, TeamModel } from "../../../core/models/team.model";
+import { ActiveElement, Chart, ChartData, ChartEvent, ChartOptions, ChartType, TooltipItem } from "chart.js";
+import { color } from "chart.js/helpers";
 import DatalabelsPlugin from "chartjs-plugin-datalabels";
 import autocolors from 'chartjs-plugin-autocolors';
-import {SessionModel} from "../../../core/models/session.model";
-import {BacklogItemModel, BacklogItemUpdateModel, BacklogModel} from "../../../core/models/backlog.model";
-import {NgbOffcanvas} from "@ng-bootstrap/ng-bootstrap";
-import {DiscussionComponent} from "../discussion/discussion.component";
-import {BacklogComponent} from "../backlog/backlog.component";
-import {BaseChartDirective} from "ng2-charts";
+import { SessionModel } from "../../../core/models/session.model";
+import { BacklogItemModel, BacklogItemUpdateModel, BacklogModel } from "../../../core/models/backlog.model";
+import { NgbModal, NgbOffcanvas } from "@ng-bootstrap/ng-bootstrap";
+import { DiscussionComponent } from "../discussion/discussion.component";
+import { BacklogComponent } from "../backlog/backlog.component";
+import { BaseChartDirective } from "ng2-charts";
 
 @Component({
   selector: 'app-estimation',
@@ -64,11 +64,16 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   estimationRecords: EstimationRecordModel[] = [];
 
-  userActiveEmoji = '😃';
-  userInactiveEmoji = '😴';
+  userActiveEmoji: string = '😃';
+  userInactiveEmoji: string = '😴';
 
   private summarySubscription: Subscription = new Subscription();
   summary?: EstimationSummaryModel;
+
+  location: string = '';
+
+  @ViewChild('shareSessionModalContent')
+  shareSessionModalContent: ElementRef | undefined;
 
   @ViewChild(BaseChartDirective)
   chart: BaseChartDirective | undefined;
@@ -178,7 +183,7 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   doughnutChartPlugins = [ DatalabelsPlugin ];
 
-  constructor(private readonly store: Store, private offcanvasService: NgbOffcanvas) {
+  constructor(private readonly store: Store, private modalService: NgbModal, private offcanvasService: NgbOffcanvas) {
     Chart.register(autocolors);
   }
 
@@ -190,6 +195,7 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.backlog$ = this.store.select(BacklogSelectors.selectBacklog);
     this.round$ = this.store.select(EstimationSelectors.selectEstimationRound);
     this.summary$ = this.store.select(EstimationSelectors.selectEstimationSummary).pipe(map(cloneDeep));
+    this.location = window.location.href;
 
     this.backlogSubscription.add(
       this.backlog$.subscribe(backlog => this.backlog = backlog)
@@ -472,6 +478,26 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   leaveSession(session: SessionModel) {
     this.store.dispatch(SessionActions.leaveSession({ sessionId: session.id }));
+  }
+
+  shareSession() {
+    // Open share session modal
+    const modalRef = this.modalService.open(this.shareSessionModalContent);
+    modalRef.result
+      .then((result) => {
+        console.log('Closed with:', result);
+        this.copyTextToClipboard(this.location);
+      }, (reason) => {
+        console.log('Dismissed:', reason);
+      });
+  }
+
+  private copyTextToClipboard(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      console.log('Content copied to clipboard');
+    },() => {
+      console.error('Failed to copy');
+    });
   }
 
   getBacklogItem(backlogItemNumber: string | undefined): BacklogItemModel | undefined {
