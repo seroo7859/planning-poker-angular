@@ -4,6 +4,7 @@ import { Observable, tap } from "rxjs";
 import { SessionCreateModel, SessionJoinModel, SessionModel } from "../models/session.model";
 import { AuthService } from "./auth.service";
 import { map } from "rxjs/operators";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { map } from "rxjs/operators";
 export class SessionService {
 
   // URL to Session-API
-  private url = 'api/session';
+  private url = `${environment.production ? environment.apiUrl : 'api'}/session`;
 
   // HTTP Options
   private httpOptions = {

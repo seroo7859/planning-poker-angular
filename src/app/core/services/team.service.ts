@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { TeamModel } from "../models/team.model";
 import { Observable } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { Observable } from "rxjs";
 export class TeamService {
 
   // URL to Team-API
-  private url = 'api/team';
+  private url = `${environment.production ? environment.apiUrl : 'api'}/team`;
 
   // HTTP Options
   private httpOptions = {

@@ -9,6 +9,7 @@ import {
   BacklogModel
 } from "../models/backlog.model";
 import { map } from "rxjs/operators";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ import { map } from "rxjs/operators";
 export class BacklogService {
 
   // URL to Backlog-API
-  private url = 'api/backlog';
+  private url = `${environment.production ? environment.apiUrl : 'api'}/backlog`;
 
   // HTTP Options
   private httpOptions = {

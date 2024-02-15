@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { DiscussionModel, DiscussionPostCreateModel, DiscussionPostModel } from "../models/discussion.model";
 import { Observable } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { Observable } from "rxjs";
 export class DiscussionService {
 
   // URL to Discussion-API
-  private url = 'api/discussion';
+  private url = `${environment.production ? environment.apiUrl : 'api'}/discussion`;
 
   // HTTP Options
   private httpOptions = {

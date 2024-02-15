@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { EstimationModel, EstimationRoundModel, EstimationSummaryModel } from "../models/estimation.model";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { EstimationModel, EstimationRoundModel, EstimationSummaryModel } from ".
 export class EstimationService {
 
   // URL to Estimation-API
-  private url = 'api/estimation';
+  private url = `${environment.production ? environment.apiUrl : 'api'}/estimation`;
 
   // HTTP Options
   private httpOptions = {
