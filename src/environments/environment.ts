@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   name: 'prod',
-  apiUrl: `${window.location.origin}/api`,
-  brokerUrl: `${window.location.origin.replace(/^https?/, 'ws')}/ws`
+  apiUrl: `https://planning-poker-service.onrender.com/api`,
+  brokerUrl: `wss://planning-poker-service.onrender.com/ws`
 };
