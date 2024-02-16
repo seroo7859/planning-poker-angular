@@ -195,7 +195,7 @@ export class EstimationComponent implements OnInit, AfterViewInit, OnDestroy {
     this.backlog$ = this.store.select(BacklogSelectors.selectBacklog);
     this.round$ = this.store.select(EstimationSelectors.selectEstimationRound);
     this.summary$ = this.store.select(EstimationSelectors.selectEstimationSummary).pipe(map(cloneDeep));
-    this.location = window.location.href;
+    this.location = `${window.location.origin}${window.location.pathname.replace("sessionboard/", "onboarding/join-session?id=")}`;
 
     this.backlogSubscription.add(
       this.backlog$.subscribe(backlog => this.backlog = backlog)
