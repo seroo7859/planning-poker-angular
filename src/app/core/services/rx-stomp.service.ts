@@ -60,8 +60,8 @@ const myRxStompConfig: RxStompConfig = {
   heartbeatIncoming: 0,               // disabled
   heartbeatOutgoing: 20000,           // every 20 seconds
 
-  connectionTimeout: 400,             // retry reconnect if Stomp connection is not established in 400 milliseconds
-  reconnectDelay: 200,                // wait 200 milliseconds before attempting auto reconnect
+  connectionTimeout: 5000,             // retry reconnect if Stomp connection is not established in 5000 milliseconds
+  reconnectDelay: 1000,                // wait 1000 milliseconds before attempting auto reconnect
 
   debug: !environment.production ? log : noDebug,    // log diagnostics
 
